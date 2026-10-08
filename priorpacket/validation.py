@@ -52,6 +52,7 @@ def run_validation_suite(manifest_path: str | Path, out_dir: str | Path) -> dict
         "passed": all(result.passed for result in results),
         "total_cases": len(results),
         "passed_cases": sum(1 for result in results if result.passed),
+        "metrics": _metrics(results),
         "results": [result.to_dict() for result in results],
     }
     json_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -90,11 +91,16 @@ def _evaluate_case(case: dict[str, Any], actual: dict[str, Any]) -> ValidationCa
 
 
 def _render_markdown(payload: dict[str, Any]) -> str:
+    metrics = payload["metrics"]
     lines = [
         f"# {payload['suite']}",
         "",
         f"- Passed: {payload['passed']}",
         f"- Cases: {payload['passed_cases']}/{payload['total_cases']}",
+        f"- Status accuracy: {metrics['status_accuracy']:.3f}",
+        f"- Risk accuracy: {metrics['risk_accuracy']:.3f}",
+        f"- Score exact-match rate: {metrics['score_exact_match_rate']:.3f}",
+        f"- Missing-criteria exact-match rate: {metrics['missing_criteria_exact_match_rate']:.3f}",
         "",
         "| Case | Passed | Status | Risk | Score | Notes |",
         "| --- | --- | --- | --- | ---: | --- |",
@@ -107,4 +113,57 @@ def _render_markdown(payload: dict[str, Any]) -> str:
             f"{actual['risk_band']} | {actual['score_percent']}% | {notes} |"
         )
     lines.append("")
+    lines.extend(["## Status Confusion Matrix", ""])
+    statuses = metrics["status_labels"]
+    lines.append("| Expected \\ Actual | " + " | ".join(statuses) + " |")
+    lines.append("| --- | " + " | ".join("---:" for _ in statuses) + " |")
+    for expected in statuses:
+        row = metrics["status_confusion_matrix"].get(expected, {})
+        counts = [str(row.get(actual, 0)) for actual in statuses]
+        lines.append("| " + expected + " | " + " | ".join(counts) + " |")
+    lines.append("")
     return "\n".join(lines)
+
+
+def _metrics(results: list[ValidationCaseResult]) -> dict[str, Any]:
+    total = len(results) or 1
+    status_matches = 0
+    risk_matches = 0
+    score_matches = 0
+    missing_matches = 0
+    labels: set[str] = set()
+    matrix: dict[str, dict[str, int]] = {}
+
+    for result in results:
+        expected_status = str(result.expected.get("status"))
+        actual_status = str(result.actual.get("status"))
+        expected_risk = str(result.expected.get("risk_band"))
+        actual_risk = str(result.actual.get("risk_band"))
+        expected_score = result.expected.get("score_percent")
+        actual_score = result.actual.get("score_percent")
+
+        labels.update([expected_status, actual_status])
+        matrix.setdefault(expected_status, {})
+        matrix[expected_status][actual_status] = matrix[expected_status].get(actual_status, 0) + 1
+
+        if expected_status == actual_status:
+            status_matches += 1
+        if expected_risk == actual_risk:
+            risk_matches += 1
+        if expected_score == actual_score:
+            score_matches += 1
+        if not any(note.startswith("missing_criteria:") for note in result.notes):
+            missing_matches += 1
+
+    sorted_labels = sorted(labels)
+    return {
+        "status_accuracy": status_matches / total,
+        "risk_accuracy": risk_matches / total,
+        "score_exact_match_rate": score_matches / total,
+        "missing_criteria_exact_match_rate": missing_matches / total,
+        "status_labels": sorted_labels,
+        "status_confusion_matrix": {
+            expected: {actual: matrix.get(expected, {}).get(actual, 0) for actual in sorted_labels}
+            for expected in sorted_labels
+        },
+    }

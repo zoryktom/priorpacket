@@ -9,6 +9,7 @@ from pathlib import Path
 from priorpacket.audit import write_audit_manifest
 from priorpacket.batch import write_batch_report
 from priorpacket.engine import analyze_request
+from priorpacket.evidence_graph import build_evidence_graph
 from priorpacket.policy import load_bundle, load_policy, validate_policy
 from priorpacket.render import write_outputs
 from priorpacket.validation import run_validation_suite
@@ -30,6 +31,8 @@ class ProductWorkflowTests(unittest.TestCase):
         self.assertTrue(payload["passed"])
         self.assertEqual(payload["passed_cases"], 5)
         self.assertEqual(payload["total_cases"], 5)
+        self.assertEqual(payload["metrics"]["status_accuracy"], 1.0)
+        self.assertIn("status_confusion_matrix", payload["metrics"])
 
     def test_batch_report_contains_missing_proof_rows(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -71,6 +74,22 @@ class ProductWorkflowTests(unittest.TestCase):
         self.assertEqual(manifest["status"], "ready_for_review")
         self.assertEqual(len(manifest["inputs"]["policy"]["sha256"]), 64)
         self.assertEqual(len(manifest["outputs"]["html"]["sha256"]), 64)
+
+    def test_evidence_graph_links_criteria_to_fhir_resources(self) -> None:
+        policy = load_policy(ROOT / "examples/policies/knee_mri_policy.json")
+        bundle = load_bundle(ROOT / "examples/fhir/knee_mri_bundle.json")
+        result = analyze_request(policy=policy, bundle=bundle, service_code="73721")
+
+        graph = build_evidence_graph(result)
+        relationships = {edge["relationship"] for edge in graph["edges"]}
+        resource_nodes = [node for node in graph["nodes"] if node["type"] == "fhir_resource"]
+        node_ids = [node["id"] for node in graph["nodes"]]
+
+        self.assertEqual(graph["schema"], "priorpacket.evidence_graph.v1")
+        self.assertIn("supported_by", relationships)
+        self.assertIn("best_pathway", relationships)
+        self.assertTrue(resource_nodes)
+        self.assertEqual(len(node_ids), len(set(node_ids)))
 
 
 if __name__ == "__main__":

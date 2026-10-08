@@ -10,6 +10,7 @@ It takes a FHIR Bundle, a policy pack, and a requested service code, then produc
 - Denial-risk band.
 - JSON, Markdown, and HTML evidence packets.
 - FHIR `Task` work item for follow-up.
+- Evidence graph linking policy criteria to FHIR resources.
 - Audit manifest with SHA-256 hashes for inputs and outputs.
 - Batch CSV report for multiple packets.
 
@@ -80,10 +81,16 @@ This writes:
 - `evidence_gap_report.csv`
 - `batch_summary.md`
 
+## Evidence Graph
+
+Each packet run writes `evidence_graph.json`, a machine-readable graph linking the request, selected pathway, required criteria, supporting FHIR resources, and missing-proof actions.
+
 ## Evaluation Docs
 
 - [Health-system evaluation guide](docs/HEALTH_SYSTEM_EVALUATION.md)
 - [Validation guide](docs/VALIDATION.md)
+- [Reproducibility guide](docs/REPRODUCIBILITY.md)
+- [Evidence graph](docs/EVIDENCE_GRAPH.md)
 - [EHR integration path](docs/EHR_INTEGRATION.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Policy packs](docs/POLICY_PACKS.md)

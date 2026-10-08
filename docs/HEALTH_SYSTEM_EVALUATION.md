@@ -51,6 +51,7 @@ Open `http://127.0.0.1:8787` for the local review console.
 
 - Evidence packet: JSON, Markdown, HTML.
 - FHIR `Task` work item.
+- Evidence graph.
 - Audit manifest with SHA-256 hashes.
 - Batch JSON and CSV reports.
 - Validation JSON and Markdown reports.

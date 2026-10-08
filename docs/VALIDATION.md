@@ -23,6 +23,7 @@ Expected result:
 ```text
 Cases: 5/5
 Passed: True
+Status accuracy: 1.000
 ```
 
 ## Why this matters
@@ -30,6 +31,8 @@ Passed: True
 Prior authorization tooling should not be trusted because a demo looks polished. It should be trusted because the cases are explicit, the expected outcomes are versioned, and failures are visible.
 
 The validation suite is intentionally synthetic. It proves product behavior without shipping PHI in the repository.
+
+The report also includes status accuracy, risk accuracy, score exact-match rate, missing-criteria exact-match rate, and a status confusion matrix.
 
 ## Add a new validation case
 

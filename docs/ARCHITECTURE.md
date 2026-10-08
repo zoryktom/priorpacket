@@ -9,7 +9,7 @@ PriorPacket uses a small deterministic agent chain. Each stage is inspectable an
 3. **Evidence agent** maps policy criteria to FHIR resources.
 4. **Pathway agent** finds the strongest qualifying pathway.
 5. **Gap agent** turns missing criteria into operational checklist items.
-6. **Packet agent** renders JSON, Markdown, and HTML artifacts.
+6. **Packet agent** renders JSON, Markdown, HTML, FHIR Task, evidence graph, and audit artifacts.
 
 ## Design principles
 
@@ -18,6 +18,7 @@ PriorPacket uses a small deterministic agent chain. Each stage is inspectable an
 - Deterministic output suitable for audit.
 - Synthetic examples only.
 - Policy packs are data, not hard-coded logic.
+- Evidence provenance is exported as a graph, not only as prose.
 
 ## Where this fits
 

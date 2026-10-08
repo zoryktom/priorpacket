@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from .davinci import build_gap_task
+from .evidence_graph import build_evidence_graph
 from .models import AnalysisResult
 
 
@@ -16,13 +17,21 @@ def write_outputs(result: AnalysisResult, out_dir: str | Path) -> dict[str, Path
     md_path = target / "evidence_packet.md"
     html_path = target / "evidence_packet.html"
     task_path = target / "gap_task.fhir.json"
+    graph_path = target / "evidence_graph.json"
 
     json_path.write_text(json.dumps(result.to_dict(), indent=2) + "\n", encoding="utf-8")
     md_path.write_text(render_markdown(result), encoding="utf-8")
     html_path.write_text(render_html(result), encoding="utf-8")
     task_path.write_text(json.dumps(build_gap_task(result), indent=2) + "\n", encoding="utf-8")
+    graph_path.write_text(json.dumps(build_evidence_graph(result), indent=2) + "\n", encoding="utf-8")
 
-    return {"json": json_path, "markdown": md_path, "html": html_path, "fhir_task": task_path}
+    return {
+        "json": json_path,
+        "markdown": md_path,
+        "html": html_path,
+        "fhir_task": task_path,
+        "evidence_graph": graph_path,
+    }
 
 
 def render_markdown(result: AnalysisResult) -> str:

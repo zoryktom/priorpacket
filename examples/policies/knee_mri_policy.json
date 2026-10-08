@@ -1,0 +1,70 @@
+{
+  "policy_id": "demo-health-knee-mri-v1",
+  "payer": "Demo Health Plan",
+  "service": {
+    "name": "MRI lower extremity joint without contrast",
+    "codes": ["73721"]
+  },
+  "criteria": [
+    {
+      "id": "knee-pain-diagnosis",
+      "kind": "condition",
+      "label": "Knee pain or internal derangement diagnosis",
+      "codes": ["M25.561", "M23.91", "S83.91XA"],
+      "weight": 20,
+      "met_rationale": "A qualifying knee diagnosis is present.",
+      "missing_action": "Add a current diagnosis supporting the requested knee MRI."
+    },
+    {
+      "id": "recent-xray",
+      "kind": "procedure",
+      "label": "Recent knee radiograph",
+      "codes": ["73560", "73562", "73564"],
+      "within_days": 90,
+      "weight": 20,
+      "met_rationale": "A recent radiograph is documented.",
+      "missing_action": "Attach knee radiograph report from the last 90 days or document why radiography is not appropriate."
+    },
+    {
+      "id": "conservative-care",
+      "kind": "document",
+      "label": "Six weeks of conservative management",
+      "keywords": ["physical therapy", "six weeks", "nsaid"],
+      "require_all_keywords": true,
+      "within_days": 180,
+      "weight": 30,
+      "met_rationale": "Conservative treatment history is documented.",
+      "missing_action": "Collect PT/home exercise notes and medication history showing at least six weeks of conservative care."
+    },
+    {
+      "id": "mechanical-symptoms",
+      "kind": "document",
+      "label": "Mechanical symptoms or functional limitation",
+      "keywords": ["locking", "catching", "instability", "limited range of motion"],
+      "weight": 15,
+      "met_rationale": "Functional limitation or mechanical symptoms are documented.",
+      "missing_action": "Document locking, catching, instability, or functional limitation in the clinical note."
+    },
+    {
+      "id": "acute-trauma",
+      "kind": "condition",
+      "label": "Acute knee trauma",
+      "codes": ["S83.91XA", "S89.91XA"],
+      "weight": 25,
+      "met_rationale": "Acute trauma diagnosis is present.",
+      "missing_action": "Add trauma diagnosis and injury mechanism if urgent imaging pathway is being used."
+    }
+  ],
+  "pathways": [
+    {
+      "id": "conservative-pathway",
+      "label": "Non-urgent MRI after failed conservative management",
+      "requires": ["knee-pain-diagnosis", "recent-xray", "conservative-care", "mechanical-symptoms"]
+    },
+    {
+      "id": "trauma-pathway",
+      "label": "Urgent MRI after acute trauma",
+      "requires": ["knee-pain-diagnosis", "recent-xray", "acute-trauma", "mechanical-symptoms"]
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "priorpacket"
+version = "0.1.0"
+description = "Local-first prior authorization and denial-prevention evidence engine for FHIR workflows."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "zoryktom" }]
+keywords = [
+  "healthcare",
+  "fhir",
+  "prior-authorization",
+  "revenue-cycle",
+  "clinical-informatics",
+  "denials",
+  "hl7",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Healthcare Industry",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/zoryktom/priorpacket"
+Repository = "https://github.com/zoryktom/priorpacket"
+Issues = "https://github.com/zoryktom/priorpacket/issues"
+
+[project.scripts]
+priorpacket = "priorpacket.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["priorpacket*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

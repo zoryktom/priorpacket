@@ -2,11 +2,11 @@
 
 PriorPacket is designed to plug into EHR and revenue-cycle workflows without becoming a payer portal.
 
-## Integration surfaces
+## Integration Surfaces
 
-### FHIR Bundle input
+### FHIR Bundle Input
 
-The current product accepts FHIR R4 Bundles. A production deployment should map EHR data into a request-scoped bundle containing:
+The current product accepts FHIR R4 Bundles. A deployment can map EHR data into a request-scoped bundle containing:
 
 - `Patient`
 - `ServiceRequest`
@@ -16,7 +16,7 @@ The current product accepts FHIR R4 Bundles. A production deployment should map 
 - `MedicationRequest`
 - `DocumentReference`
 
-### FHIR Task output
+### FHIR Task Output
 
 PriorPacket emits a FHIR `Task`-style work item for missing-proof queues. This can support:
 
@@ -25,29 +25,24 @@ PriorPacket emits a FHIR `Task`-style work item for missing-proof queues. This c
 - Missing-documentation follow-up.
 - Audit trails.
 
-### SMART on FHIR review app
+### SMART on FHIR Review App
 
-The local review console is the first step toward a SMART on FHIR app:
+The local review console is a reference surface for a future SMART on FHIR app:
 
-- Launch in patient/request context.
+- Launch in patient or request context.
 - Pull scoped FHIR resources.
 - Run evidence analysis inside the approved deployment.
 - Display packet readiness and missing-proof actions.
 - Write a `Task` or internal work item for staff follow-up.
 
-## Near-term implementation path
+## Implementation Path
 
-1. Keep the open-source engine local and deterministic.
-2. Add a small HTTP API around `analyze_request`.
+1. Keep the engine local and deterministic.
+2. Add an HTTP API around `analyze_request`.
 3. Add SMART launch scaffolding.
-4. Add customer-specific FHIR resource mapping.
+4. Add site-specific FHIR resource mapping.
 5. Add work-queue export for `Task` resources.
 
-## Positioning for EHR vendors
+## Fit
 
-PriorPacket should be positioned as an evidence-completeness layer:
-
-- It does not replace scheduling, ordering, claims, clearinghouses, or payer submission.
-- It helps staff see missing proof before a request is submitted.
-- It can create structured work items when proof is missing.
-- It supports the industry transition toward FHIR-based prior authorization workflows.
+PriorPacket does not replace scheduling, ordering, claims, clearinghouses, or payer submission. It helps staff see missing proof before a request is submitted and creates structured work items when proof is missing.

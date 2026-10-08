@@ -1,6 +1,8 @@
 # PriorPacket
 
-PriorPacket is a local-first prior authorization and denial-prevention engine for health systems. It takes a FHIR Bundle, a payer policy, and a requested service, then produces a defensible evidence packet: what is satisfied, what is missing, why the request is at risk, and which clinical artifacts should be collected before submission.
+PriorPacket finds missing proof before a prior authorization request is submitted.
+
+It takes a FHIR Bundle, a payer policy pack, and a requested service code, then produces a defensible packet: proof found, proof missing, readiness status, denial-risk band, staff checklist, audit manifest, and FHIR `Task` work item.
 
 The open-source core is deterministic and auditable. It is designed for hospital revenue-cycle, clinical informatics, and interoperability teams that need explainable workflows around prior authorization rather than another black-box tool.
 
@@ -14,9 +16,13 @@ Prior authorization is becoming a standards-driven interoperability problem. CMS
 - Reads payer policy packs written as portable JSON.
 - Maps policy criteria to FHIR evidence from `Condition`, `Observation`, `Procedure`, `MedicationRequest`, `DocumentReference`, and `ServiceRequest`.
 - Scores denial risk using transparent pathway logic.
-- Flags missing documentation before submission.
+- Flags missing proof before submission.
 - Produces JSON, Markdown, and HTML evidence packets.
 - Exports a FHIR `Task` work item for missing-evidence queues.
+- Generates audit manifests with input and output hashes.
+- Runs a versioned product validation suite.
+- Produces batch CSV reports for pilot audits.
+- Includes a local browser review console.
 - Runs fully local with no external API calls and no PHI leaving the environment.
 
 ## Quickstart
@@ -35,6 +41,34 @@ priorpacket analyze \
 Open `demo-output/evidence_packet.html` in a browser.
 
 The run also writes `demo-output/gap_task.fhir.json`, a FHIR `Task`-style work item that can feed an evidence completion queue.
+
+## Product validation
+
+```bash
+priorpacket validate-policy --policy examples/policies/knee_mri_policy.json
+
+priorpacket validate-product \
+  --manifest examples/cases/manifest.json \
+  --out reports/validation
+
+priorpacket batch-analyze \
+  --policy examples/policies/knee_mri_policy.json \
+  --bundles examples/cases/fhir \
+  --service-code 73721 \
+  --out reports/batch
+```
+
+The built-in validation suite covers ready packets, missing x-ray proof, missing prior treatment evidence, acute injury workflows, and wrong-policy mismatch.
+
+## Review console
+
+```bash
+priorpacket serve
+```
+
+Open `http://127.0.0.1:8787`.
+
+The console runs locally and loads the synthetic validation scenarios.
 
 ## Standards this tracks
 
@@ -70,6 +104,10 @@ The open-source core should stay useful on its own. A commercial company can gro
 
 The startup wedge is radiology and MSK imaging prior authorization evidence completeness. The goal is not to replace EHRs, clearinghouses, or payer portals; it is to make the packet defensible before submission.
 
+- [Health-system evaluation guide](docs/HEALTH_SYSTEM_EVALUATION.md)
+- [Validation guide](docs/VALIDATION.md)
+- [EHR integration path](docs/EHR_INTEGRATION.md)
+- [Product strategy](docs/PRODUCT_STRATEGY.md)
 - [Founder memo](docs/FOUNDER_MEMO.md)
 - [Competitive landscape](docs/COMPETITIVE_LANDSCAPE.md)
 - [Pilot design](docs/PILOT_DESIGN.md)

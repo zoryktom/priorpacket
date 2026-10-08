@@ -1,0 +1,68 @@
+{
+  "suite": "PriorPacket MSK imaging validation suite",
+  "cases": [
+    {
+      "id": "ready-knee-mri",
+      "label": "Ready packet: knee MRI",
+      "policy": "examples/policies/knee_mri_policy.json",
+      "bundle": "examples/cases/fhir/ready_knee_mri.json",
+      "service_code": "73721",
+      "expected": {
+        "status": "ready_for_review",
+        "risk_band": "low",
+        "score_percent": 100
+      }
+    },
+    {
+      "id": "missing-xray",
+      "label": "Missing required x-ray proof",
+      "policy": "examples/policies/knee_mri_policy.json",
+      "bundle": "examples/cases/fhir/missing_xray.json",
+      "service_code": "73721",
+      "expected": {
+        "status": "needs_evidence",
+        "risk_band": "moderate",
+        "score_percent": 76
+      },
+      "expected_missing_criteria": ["recent-xray"]
+    },
+    {
+      "id": "missing-prior-treatment-evidence",
+      "label": "Missing prior treatment evidence",
+      "policy": "examples/policies/knee_mri_policy.json",
+      "bundle": "examples/cases/fhir/missing_prior_treatment_evidence.json",
+      "service_code": "73721",
+      "expected": {
+        "status": "needs_evidence",
+        "risk_band": "moderate",
+        "score_percent": 65
+      },
+      "expected_missing_criteria": ["prior-treatment-evidence"]
+    },
+    {
+      "id": "acute-trauma-ready",
+      "label": "Ready packet: acute injury pathway",
+      "policy": "examples/policies/knee_mri_policy.json",
+      "bundle": "examples/cases/fhir/acute_trauma_ready.json",
+      "service_code": "73721",
+      "expected": {
+        "status": "ready_for_review",
+        "risk_band": "low",
+        "score_percent": 100
+      }
+    },
+    {
+      "id": "wrong-policy-mismatch",
+      "label": "Wrong policy selected for service code",
+      "policy": "examples/policies/knee_mri_policy.json",
+      "bundle": "examples/cases/fhir/ready_knee_mri.json",
+      "service_code": "72148",
+      "expected": {
+        "status": "policy_mismatch",
+        "risk_band": "high",
+        "score_percent": 100
+      },
+      "expected_warnings": ["Service code 72148 is not listed in this policy pack."]
+    }
+  ]
+}

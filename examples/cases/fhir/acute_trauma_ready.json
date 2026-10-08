@@ -1,0 +1,77 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "synthetic-004",
+        "name": [{ "given": ["Jordan"], "family": "Patel" }],
+        "gender": "male",
+        "birthDate": "2001-03-09"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "sr-knee-mri-trauma",
+        "status": "active",
+        "intent": "order",
+        "authoredOn": "2026-09-12",
+        "subject": { "reference": "Patient/synthetic-004" },
+        "code": {
+          "coding": [
+            {
+              "system": "http://www.ama-assn.org/go/cpt",
+              "code": "73721",
+              "display": "MRI lower extremity joint without contrast"
+            }
+          ],
+          "text": "MRI right knee without contrast"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-knee-trauma",
+        "code": {
+          "coding": [
+            { "system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "S83.91XA", "display": "Sprain of unspecified site of right knee, initial encounter" }
+          ],
+          "text": "Right knee injury after twisting event"
+        },
+        "subject": { "reference": "Patient/synthetic-004" },
+        "recordedDate": "2026-09-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "proc-xray",
+        "status": "completed",
+        "code": {
+          "coding": [
+            { "system": "http://www.ama-assn.org/go/cpt", "code": "73562", "display": "Radiologic examination, knee; 3 views" }
+          ],
+          "text": "Right knee x-ray, three views"
+        },
+        "subject": { "reference": "Patient/synthetic-004" },
+        "performedDateTime": "2026-09-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DocumentReference",
+        "id": "doc-trauma-note",
+        "status": "current",
+        "type": {
+          "coding": [{ "system": "http://loinc.org", "code": "11506-3", "display": "Progress note" }],
+          "text": "Orthopedic urgent visit note"
+        },
+        "date": "2026-09-11",
+        "description": "Acute twisting injury with instability and catching. Exam limited by pain and limited range of motion."
+      }
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "synthetic-003",
+        "name": [{ "given": ["Avery"], "family": "Chen" }],
+        "gender": "female",
+        "birthDate": "1990-11-22"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "sr-knee-mri-missing-prior-treatment",
+        "status": "active",
+        "intent": "order",
+        "authoredOn": "2026-09-12",
+        "subject": { "reference": "Patient/synthetic-003" },
+        "code": {
+          "coding": [
+            {
+              "system": "http://www.ama-assn.org/go/cpt",
+              "code": "73721",
+              "display": "MRI lower extremity joint without contrast"
+            }
+          ],
+          "text": "MRI right knee without contrast"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-knee-pain",
+        "code": {
+          "coding": [
+            { "system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "M25.561", "display": "Pain in right knee" }
+          ],
+          "text": "Pain in right knee"
+        },
+        "subject": { "reference": "Patient/synthetic-003" },
+        "recordedDate": "2026-08-01"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "proc-xray",
+        "status": "completed",
+        "code": {
+          "coding": [
+            { "system": "http://www.ama-assn.org/go/cpt", "code": "73562", "display": "Radiologic examination, knee; 3 views" }
+          ],
+          "text": "Right knee x-ray, three views"
+        },
+        "subject": { "reference": "Patient/synthetic-003" },
+        "performedDateTime": "2026-08-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DocumentReference",
+        "id": "doc-office-note",
+        "status": "current",
+        "type": {
+          "coding": [{ "system": "http://loinc.org", "code": "11506-3", "display": "Progress note" }],
+          "text": "Office visit note"
+        },
+        "date": "2026-09-01",
+        "description": "Patient reports knee catching and limited range of motion with stairs. No prior treatment documentation is attached."
+      }
+    }
+  ]
+}

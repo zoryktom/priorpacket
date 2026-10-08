@@ -1,0 +1,62 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "synthetic-002",
+        "name": [{ "given": ["Taylor"], "family": "Reed" }],
+        "gender": "male",
+        "birthDate": "1978-06-04"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "sr-knee-mri-missing-xray",
+        "status": "active",
+        "intent": "order",
+        "authoredOn": "2026-09-12",
+        "subject": { "reference": "Patient/synthetic-002" },
+        "code": {
+          "coding": [
+            {
+              "system": "http://www.ama-assn.org/go/cpt",
+              "code": "73721",
+              "display": "MRI lower extremity joint without contrast"
+            }
+          ],
+          "text": "MRI right knee without contrast"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-knee-pain",
+        "code": {
+          "coding": [
+            { "system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "M25.561", "display": "Pain in right knee" }
+          ],
+          "text": "Pain in right knee"
+        },
+        "subject": { "reference": "Patient/synthetic-002" },
+        "recordedDate": "2026-08-01"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "DocumentReference",
+        "id": "doc-pt-note",
+        "status": "current",
+        "type": {
+          "coding": [{ "system": "http://loinc.org", "code": "11506-3", "display": "Progress note" }],
+          "text": "Physical therapy progress note"
+        },
+        "date": "2026-09-01",
+        "description": "Physical therapy completed for six weeks with NSAID trial. Persistent knee catching and limited range of motion."
+      }
+    }
+  ]
+}

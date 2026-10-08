@@ -46,7 +46,7 @@ class EngineTests(unittest.TestCase):
         )
 
         serialized = json.dumps(result.to_dict())
-        self.assertIn("conservative-care", serialized)
+        self.assertIn("prior-treatment-evidence", serialized)
 
 
 if __name__ == "__main__":

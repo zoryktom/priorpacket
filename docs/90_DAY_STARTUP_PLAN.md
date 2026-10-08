@@ -15,7 +15,7 @@ Product:
 - Add 5 synthetic imaging cases:
   - Ready knee MRI.
   - Missing x-ray.
-  - Missing conservative therapy.
+  - Missing prior treatment evidence.
   - Trauma pathway.
   - Wrong CPT/policy mismatch.
 

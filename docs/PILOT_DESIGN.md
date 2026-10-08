@@ -45,7 +45,7 @@ Minimum:
 - Service request date.
 - Relevant notes or document metadata.
 - Prior imaging/procedure evidence.
-- Conservative treatment documentation if required.
+- Prior treatment documentation if required.
 
 Preferred:
 

@@ -21,6 +21,7 @@ def analyze_request(
     best_pathway = _best_pathway(policy, criteria)
     max_score = best_pathway.max_score
     score = best_pathway.score
+    warnings = _warnings(policy, service_code)
     risk_band = _risk_band(best_pathway)
     status = _status(best_pathway)
     missing_actions = tuple(
@@ -28,7 +29,13 @@ def analyze_request(
         for result in criteria
         if result.criterion_id in best_pathway.missing_criteria and result.missing_action
     )
-    warnings = _warnings(policy, service_code)
+    if warnings:
+        status = "policy_mismatch"
+        risk_band = "high"
+        missing_actions = (
+            f"Select a policy pack that explicitly includes service code {service_code}.",
+            *missing_actions,
+        )
 
     service = policy.get("service", {})
     return AnalysisResult(

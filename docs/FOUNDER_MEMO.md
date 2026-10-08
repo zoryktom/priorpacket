@@ -30,7 +30,7 @@ Start with outpatient radiology and orthopedic MSK imaging:
 - MRI lumbar spine.
 - CT cervical spine.
 - Shoulder MRI.
-- Advanced imaging after failed conservative therapy.
+- Advanced imaging after required prior treatment evidence is documented.
 
 This beachhead is better than "all prior auth" because the policy logic is repetitive, the requested evidence is usually present somewhere in the chart, and the buyer can measure rework and preventable denials quickly.
 
@@ -60,7 +60,7 @@ Champion:
 User:
 
 - Prior authorization specialist.
-- Medical assistant.
+- Clinical support staff.
 - Referral coordinator.
 - RCM analyst.
 

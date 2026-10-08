@@ -26,15 +26,15 @@
       "missing_action": "Attach knee radiograph report from the last 90 days or document why radiography is not appropriate."
     },
     {
-      "id": "conservative-care",
+      "id": "prior-treatment-evidence",
       "kind": "document",
-      "label": "Six weeks of conservative management",
+      "label": "Documented prior treatment attempt",
       "keywords": ["physical therapy", "six weeks", "nsaid"],
       "require_all_keywords": true,
       "within_days": 180,
       "weight": 30,
-      "met_rationale": "Conservative treatment history is documented.",
-      "missing_action": "Collect PT/home exercise notes and medication history showing at least six weeks of conservative care."
+      "met_rationale": "Required prior treatment evidence is documented.",
+      "missing_action": "Collect PT, home exercise, medication, or activity-modification notes showing the required prior treatment attempt."
     },
     {
       "id": "mechanical-symptoms",
@@ -57,9 +57,9 @@
   ],
   "pathways": [
     {
-      "id": "conservative-pathway",
-      "label": "Non-urgent MRI after failed conservative management",
-      "requires": ["knee-pain-diagnosis", "recent-xray", "conservative-care", "mechanical-symptoms"]
+      "id": "standard-pathway",
+      "label": "Standard MRI pathway after documented prior treatment",
+      "requires": ["knee-pain-diagnosis", "recent-xray", "prior-treatment-evidence", "mechanical-symptoms"]
     },
     {
       "id": "trauma-pathway",

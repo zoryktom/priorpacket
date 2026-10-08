@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/zoryktom/priorpacket/schemas/policy-pack.schema.json",
+  "title": "PriorPacket policy pack",
+  "type": "object",
+  "required": ["policy_id", "payer", "service", "criteria", "pathways"],
+  "additionalProperties": true,
+  "properties": {
+    "policy_id": { "type": "string", "minLength": 1 },
+    "payer": { "type": "string", "minLength": 1 },
+    "service": {
+      "type": "object",
+      "required": ["name", "codes"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "label", "weight"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "kind": {
+            "type": "string",
+            "enum": ["condition", "procedure", "observation", "document", "medication"]
+          },
+          "label": { "type": "string" },
+          "codes": { "type": "array", "items": { "type": "string" } },
+          "keywords": { "type": "array", "items": { "type": "string" } },
+          "operator": { "type": "string", "enum": [">", ">=", "<", "<=", "=="] },
+          "value": { "type": "number" },
+          "within_days": { "type": "integer", "minimum": 1 },
+          "weight": { "type": "integer", "minimum": 1 },
+          "met_rationale": { "type": "string" },
+          "missing_action": { "type": "string" }
+        }
+      }
+    },
+    "pathways": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "requires"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string" },
+          "requires": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

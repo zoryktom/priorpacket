@@ -9,7 +9,7 @@ def build_gap_task(result: AnalysisResult) -> dict[str, Any]:
     """Build a FHIR Task-like work item for evidence completion.
 
     This is an operational export for provider workflows. It is intentionally
-    conservative and does not claim conformance to a full Da Vinci profile.
+    cautious and does not claim conformance to a full Da Vinci profile.
     """
 
     task_status = "ready" if result.status == "ready_for_review" else "requested"

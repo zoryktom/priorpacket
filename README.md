@@ -66,6 +66,15 @@ The open-source core should stay useful on its own. A commercial company can gro
 - Analytics for denial leakage and avoidable resubmissions.
 - On-prem or VPC deployments for health systems.
 
+## Startup plan
+
+The startup wedge is radiology and MSK imaging prior authorization evidence completeness. The goal is not to replace EHRs, clearinghouses, or payer portals; it is to make the packet defensible before submission.
+
+- [Founder memo](docs/FOUNDER_MEMO.md)
+- [Competitive landscape](docs/COMPETITIVE_LANDSCAPE.md)
+- [Pilot design](docs/PILOT_DESIGN.md)
+- [90-day startup plan](docs/90_DAY_STARTUP_PLAN.md)
+
 ## Safety
 
 PriorPacket is not a medical device, does not make treatment recommendations, and does not determine insurance coverage. It organizes documentation against administrative payer-policy criteria for qualified staff review.

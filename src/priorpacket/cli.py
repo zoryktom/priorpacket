@@ -6,10 +6,19 @@ from pathlib import Path
 
 from .audit import write_audit_manifest
 from .batch import write_batch_report
-from .engine import analyze_request
+from .engine import PacketBuilder, analyze_request
 from .policy import PolicyError, load_bundle, load_policy, validate_policy
 from .render import write_outputs
+from .validator import CompletenessScorer
 from .validation import run_validation_suite
+
+
+def _load_json(path: str | Path) -> dict:
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def _dump_json(payload: dict) -> str:
+    return json.dumps(payload, indent=2, sort_keys=True) + "\n"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -25,6 +34,15 @@ def build_parser() -> argparse.ArgumentParser:
     analyze.add_argument("--service-code", required=True, help="Requested CPT/HCPCS/service code.")
     analyze.add_argument("--out", default="demo-output", help="Output directory.")
     analyze.add_argument("--request-id", default=None, help="Optional stable request id.")
+
+    build = subcommands.add_parser("build", help="Compile a Da Vinci PAS-oriented authorization packet.")
+    build.add_argument("--patient", required=True, help="Path to a FHIR patient record bundle JSON.")
+    build.add_argument("--rule", required=True, help="Path to a clinical/payer policy rule JSON.")
+    build.add_argument("--out", required=True, help="Path to write the compiled packet JSON.")
+
+    audit = subcommands.add_parser("audit", help="Audit packet completeness against payer policy.")
+    audit.add_argument("packet", help="Path to a compiled packet JSON file.")
+    audit.add_argument("--policy", required=True, help="Path to payer policy JSON.")
 
     validate = subcommands.add_parser("validate-policy", help="Validate a payer policy pack.")
     validate.add_argument("--policy", required=True, help="Path to a payer policy JSON file.")
@@ -78,6 +96,21 @@ def main(argv: list[str] | None = None) -> None:
             print(f"Score: {result.score}/{result.max_score} ({result.score_percent}%)")
             for label, path in outputs.items():
                 print(f"{label}: {path}")
+        elif args.command == "build":
+            patient_record = _load_json(args.patient)
+            policy_rule = _load_json(args.rule)
+            packet = PacketBuilder().build(patient_record, policy_rule)
+            out_path = Path(args.out)
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_text(_dump_json(packet.fhir_dump()), encoding="utf-8")
+            print(str(out_path))
+        elif args.command == "audit":
+            packet = _load_json(args.packet)
+            policy = _load_json(args.policy)
+            result = CompletenessScorer().audit(packet, policy)
+            print(_dump_json(result.model_dump()))
+            if not result.passed:
+                raise SystemExit(2)
         elif args.command == "validate-policy":
             policy_path = Path(args.policy)
             policy = json.loads(policy_path.read_text(encoding="utf-8"))
@@ -108,3 +141,7 @@ def main(argv: list[str] | None = None) -> None:
             run_server(host=args.host, port=args.port, open_browser=args.open_browser)
     except PolicyError as exc:
         parser.exit(2, f"priorpacket: {exc}\n")
+
+
+if __name__ == "__main__":
+    main()

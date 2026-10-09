@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "priorpacket"
-version = "0.3.0"
+version = "0.4.0"
 description = "Local-first prior authorization and denial-prevention evidence engine for FHIR workflows."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -27,7 +27,14 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Topic :: Scientific/Engineering :: Medical Science Apps.",
 ]
-dependencies = []
+dependencies = [
+  "pydantic>=2.7,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8",
+]
 
 [project.urls]
 Homepage = "https://github.com/zoryktom/priorpacket"
@@ -38,8 +45,9 @@ Issues = "https://github.com/zoryktom/priorpacket/issues"
 priorpacket = "priorpacket.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["priorpacket*"]
+where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
 addopts = "-q"

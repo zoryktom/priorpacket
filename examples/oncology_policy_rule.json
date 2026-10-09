@@ -1,0 +1,49 @@
+{
+  "id": "onc-breast-her2-biologic",
+  "title": "HER2-positive metastatic breast cancer biologic authorization",
+  "service": {
+    "system": "https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
+    "code": "J9355",
+    "display": "Injection, trastuzumab"
+  },
+  "criteria": {
+    "diagnoses": [
+      {
+        "system": "http://hl7.org/fhir/sid/icd-10-cm",
+        "code": "C50.919",
+        "display": "Malignant neoplasm of unspecified site of unspecified female breast"
+      }
+    ],
+    "procedures": [
+      {
+        "system": "https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
+        "code": "J9355",
+        "display": "Injection, trastuzumab"
+      }
+    ],
+    "labs": [
+      {
+        "loinc": "48642-3",
+        "name": "HER2 [Interpretation] in Tissue",
+        "min": 3,
+        "unit": "score"
+      }
+    ],
+    "treatments": [
+      {
+        "system": "https://priorpacket.dev/fhir/CodeSystem/prior-therapy",
+        "code": "taxane-therapy",
+        "display": "Prior taxane therapy",
+        "statuses": ["failed", "intolerant"]
+      }
+    ],
+    "notes": [
+      {
+        "contains": "metastatic progression despite paclitaxel"
+      }
+    ]
+  },
+  "request_date": "2026-02-15T09:00:00Z",
+  "payer": "Organization/acme-health-plan",
+  "provider": "Organization/northstar-oncology"
+}

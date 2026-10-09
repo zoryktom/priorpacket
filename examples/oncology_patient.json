@@ -1,0 +1,148 @@
+{
+  "resourceType": "Bundle",
+  "id": "longitudinal-oncology-record",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "pat-001",
+        "identifier": [
+          {
+            "system": "https://hospital.example.org/mrn",
+            "value": "MRN-10001"
+          }
+        ],
+        "name": [
+          {
+            "family": "Rivera",
+            "given": ["Elena"]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1974-04-18"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Coverage",
+        "id": "cov-001",
+        "status": "active",
+        "beneficiary": {
+          "reference": "Patient/pat-001"
+        },
+        "subscriberId": "ACME-445566",
+        "payor": [
+          {
+            "reference": "Organization/acme-health-plan"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-001",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "C50.919",
+              "display": "Malignant neoplasm of unspecified site of unspecified female breast"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/pat-001"
+        },
+        "recordedDate": "2025-10-08"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-her2-001",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "48642-3",
+              "display": "HER2 [Interpretation] in Tissue"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/pat-001"
+        },
+        "effectiveDateTime": "2026-01-20T12:00:00Z",
+        "valueQuantity": {
+          "value": 3,
+          "unit": "score",
+          "system": "http://unitsofmeasure.org",
+          "code": "score"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-taxane-001",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "https://priorpacket.dev/fhir/CodeSystem/prior-therapy",
+              "code": "taxane-therapy",
+              "display": "Prior taxane therapy"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/pat-001"
+        },
+        "effectiveDateTime": "2025-12-12T08:00:00Z",
+        "valueString": "failed paclitaxel due to disease progression and grade 3 neuropathy"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "enc-onc-001",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/pat-001"
+        },
+        "period": {
+          "start": "2026-02-01T14:30:00Z",
+          "end": "2026-02-01T15:05:00Z"
+        },
+        "reasonCode": [
+          {
+            "text": "metastatic progression despite paclitaxel; requesting HER2-targeted biologic"
+          }
+        ],
+        "note": [
+          {
+            "authorString": "Dr. Chen",
+            "time": "2026-02-01T15:00:00Z",
+            "text": "Patient has metastatic progression despite paclitaxel. HER2 IHC is 3+ and trastuzumab is clinically indicated."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Any
 
-from .models import PatientSummary
+from priorpacket.models import PatientSummary
 
 
 def bundle_entries(bundle: dict[str, Any]) -> list[dict[str, Any]]:

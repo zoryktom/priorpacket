@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import Any
 from uuid import uuid4
 
-from .evidence import EvidenceMapper
-from .fhir import resource_date, resources_by_type, summarize_patient
-from .models import AnalysisResult, CriterionResult, PathwayResult
+from priorpacket.evidence import EvidenceMapper
+from priorpacket.fhir import resource_date, resources_by_type, summarize_patient
+from priorpacket.models import AnalysisResult, CriterionResult, PathwayResult
 
 
 def analyze_request(

@@ -1,28 +1,42 @@
 # PriorPacket
 
-PriorPacket is a validated local tool for checking whether a prior authorization packet has the required proof before submission.
+PriorPacket is a deterministic, local-first prior authorization evidence engine for FHIR workflows. It can check whether a prior authorization packet has the required proof before submission, generate review artifacts, and build Da Vinci PAS-oriented authorization bundles for research and validation.
 
-It takes a FHIR Bundle, a policy pack, and a requested service code, then produces:
+The open-source core is auditable and uses synthetic examples only. It makes no external API calls.
 
-- Readiness status.
-- Proof found in FHIR resources.
-- Missing proof checklist.
-- Denial-risk band.
-- JSON, Markdown, and HTML evidence packets.
-- FHIR `Task` work item for follow-up.
-- Evidence graph linking policy criteria to FHIR resources.
-- Audit manifest with SHA-256 hashes for inputs and outputs.
-- Batch CSV report for multiple packets.
-
-The open-source core is deterministic, auditable, and local-first. It makes no external API calls and the repository uses synthetic examples only.
-
-## Quickstart
+## Install
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .
+python -m pip install -e ".[dev]"
+```
 
+## Da Vinci PAS Packet Build
+
+Build an oncology biologic authorization packet from synthetic longitudinal FHIR input:
+
+```bash
+priorpacket build \
+  --patient examples/oncology_patient.json \
+  --rule examples/oncology_policy_rule.json \
+  --out work/oncology_packet.json
+```
+
+Audit the packet against the payer policy rule:
+
+```bash
+priorpacket audit work/oncology_packet.json \
+  --policy examples/oncology_policy_rule.json
+```
+
+Successful audits return JSON with `status: "pass"` and `score: 100`. Incomplete packets include deterministic issue codes such as `MISSING_DIAGNOSIS`, `MISSING_PROCEDURE`, `MISSING_LAB`, `LAB_OUT_OF_RANGE`, `MISSING_TREATMENT`, and `MISSING_NOTE`.
+
+## Readiness Analysis
+
+Analyze a FHIR Bundle against a policy pack and requested service code:
+
+```bash
 priorpacket validate-policy --policy examples/policies/knee_mri_policy.json
 
 priorpacket validate-product \
@@ -50,19 +64,19 @@ The console runs locally and loads the synthetic validation scenarios.
 
 ## Validation Suite
 
-PriorPacket includes a reproducible validation suite for an MSK imaging workflow:
+PriorPacket includes reproducible validation scenarios for imaging and oncology prior authorization workflows:
 
 - Ready packet: knee MRI.
 - Missing required x-ray proof.
 - Missing prior treatment evidence.
 - Ready packet: acute injury pathway.
 - Wrong policy selected for requested service code.
+- Oncology biologic PAS bundle success, incomplete evidence, approved response, and rejected response cases.
 
 Expected result:
 
 ```text
-Cases: 5/5
-Passed: True
+pytest tests/
 ```
 
 ## Batch Audit
@@ -85,6 +99,14 @@ This writes:
 
 Each packet run writes `evidence_graph.json`, a machine-readable graph linking the request, selected pathway, required criteria, supporting FHIR resources, and missing-proof actions.
 
+## Research Artifact Scope
+
+- FHIR R4 Pydantic models: `Patient`, `Coverage`, `Condition`, `Observation`, `Encounter`, `Claim`, `ClaimResponse`, and `Bundle`.
+- Da Vinci PAS-oriented request bundles with PAS Claim profile metadata and supporting evidence references.
+- Deterministic evidence selection for diagnosis, labs, failed treatment history, and physician notes.
+- Contract verification and completeness scoring for diagnosis codes, service codes, lab ranges, prerequisite treatments, notes, and payer `ClaimResponse` outcomes.
+- CLI pipeline for `priorpacket build` and `priorpacket audit`.
+
 ## Evaluation Docs
 
 - [Health-system evaluation guide](docs/HEALTH_SYSTEM_EVALUATION.md)
@@ -99,7 +121,8 @@ Each packet run writes `evidence_graph.json`, a machine-readable graph linking t
 ## Standards
 
 - [CMS Interoperability and Prior Authorization Final Rule](https://www.cms.gov/newsroom/fact-sheets/cms-interoperability-prior-authorization-final-rule-cms-0057-f)
-- [HL7 Da Vinci Prior Authorization Support](https://hl7.org/fhir/us/davinci-pas/STU1.1/index.html)
+- [HL7 Da Vinci Prior Authorization Support](https://hl7.org/fhir/us/davinci-pas/)
+- [HL7 Da Vinci Documentation Templates and Rules](https://hl7.org/fhir/us/davinci-dtr/)
 - [HL7 Da Vinci Burden Reduction reference implementations](https://github.com/HL7-DaVinci)
 
 ## Safety

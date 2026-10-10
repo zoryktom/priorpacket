@@ -32,6 +32,19 @@ priorpacket audit work/oncology_packet.json \
 
 Successful audits return JSON with `status: "pass"` and `score: 100`. Incomplete packets include deterministic issue codes such as `MISSING_DIAGNOSIS`, `MISSING_PROCEDURE`, `MISSING_LAB`, `LAB_OUT_OF_RANGE`, `MISSING_TREATMENT`, and `MISSING_NOTE`.
 
+## Research Benchmark
+
+A 45-case synthetic benchmark, counterfactual checks, and reproducibility tooling ship with the repo (synthetic data only; not clinical or payer guidance). Outcomes: `READY`, `INCOMPLETE`, `NEEDS_REVIEW`, `POLICY_MISMATCH`, `INVALID_INPUT`.
+
+```bash
+priorpacket benchmark --out reports/benchmark
+priorpacket reproduce
+priorpacket demo
+priorpacket validate-fhir benchmark/v1/bundles/A03-cgm-ready.json
+```
+
+See [docs/RESEARCH_PROTOCOL.md](docs/RESEARCH_PROTOCOL.md) for methodology, metrics, and limitations.
+
 ## Readiness Analysis
 
 Analyze a FHIR Bundle against a policy pack and requested service code:

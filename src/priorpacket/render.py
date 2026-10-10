@@ -43,7 +43,8 @@ def render_markdown(result: AnalysisResult) -> str:
         f"- Policy: `{result.policy_id}`",
         f"- Service code: `{result.service_code}`",
         f"- Patient: {result.patient.display} (`{result.patient.patient_id}`)",
-        f"- Status: **{result.status}**",
+        f"- Outcome: **{result.outcome}** (legacy status `{result.status}`)",
+        "- Data: synthetic or de-identified only; this tool never makes a coverage determination.",
         f"- Denial risk: **{result.risk_band}**",
         f"- Score: **{result.score}/{result.max_score} ({result.score_percent}%)**",
         "",
@@ -68,7 +69,13 @@ def render_markdown(result: AnalysisResult) -> str:
             ]
         )
         if criterion.missing_action:
-            lines.append(f"- Missing action: {criterion.missing_action}")
+            lines.append(f"- Next action: {criterion.missing_action}")
+        lines.append(f"- Inference: {criterion.inference}")
+        for rejected in criterion.rejected:
+            lines.append(
+                f"- Rejected {rejected.resource_type}/{rejected.resource_id} "
+                f"[{rejected.reason_code}]: {rejected.detail}"
+            )
         if criterion.evidence:
             lines.append("- Evidence:")
             for hit in criterion.evidence:
@@ -77,6 +84,14 @@ def render_markdown(result: AnalysisResult) -> str:
                     f"  - {hit.resource_type}/{hit.resource_id}{date}: {hit.label}. {hit.detail}"
                 )
         lines.append("")
+
+    issue_lines = [
+        f"- `{issue.code}` ({issue.severity}): {issue.message}"
+        for issue in (*result.issues, *(i for c in result.criteria for i in c.issues))
+        if issue.severity in {"error", "warning"}
+    ]
+    if issue_lines:
+        lines.extend(["## Issues", "", *issue_lines, ""])
 
     if result.missing_actions:
         lines.extend(["## Missing evidence checklist", ""])
@@ -190,7 +205,7 @@ def render_html(result: AnalysisResult) -> str:
     }}
     .met {{ color: var(--green); background: #e9f8f0; }}
     .missing {{ color: var(--red); background: #fdeeee; }}
-    .partial {{ color: var(--amber); background: #fff4df; }}
+    .partial, .needs_review {{ color: var(--amber); background: #fff4df; }}
     ul {{ padding-left: 20px; }}
     li {{ margin: 8px 0; }}
     .muted {{ color: var(--muted); }}
@@ -211,7 +226,7 @@ def render_html(result: AnalysisResult) -> str:
   </header>
   <main>
     <div class="grid">
-      <div class="metric"><span>Status</span><strong>{html.escape(result.status)}</strong></div>
+      <div class="metric"><span>Outcome</span><strong>{html.escape(result.outcome)}</strong></div>
       <div class="metric"><span>Denial risk</span><strong>{html.escape(result.risk_band)}</strong></div>
       <div class="metric"><span>Score</span><strong>{result.score}/{result.max_score}</strong></div>
       <div class="metric"><span>Completion</span><strong>{result.score_percent}%</strong></div>
@@ -264,6 +279,18 @@ def _criterion_card(criterion) -> str:
         + "</li>"
         for hit in criterion.evidence
     )
+    rejected = (
+        "<p><strong>Rejected candidates:</strong></p><ul>"
+        + "".join(
+            "<li>"
+            + html.escape(f"{r.resource_type}/{r.resource_id} [{r.reason_code}]: {r.detail}")
+            + "</li>"
+            for r in criterion.rejected
+        )
+        + "</ul>"
+        if criterion.rejected
+        else ""
+    )
     action = (
         f"<p><strong>Next action:</strong> {html.escape(criterion.missing_action)}</p>"
         if criterion.missing_action
@@ -276,12 +303,29 @@ def _criterion_card(criterion) -> str:
         <p>{html.escape(criterion.rationale)}</p>
         <p class="muted">Weight: {criterion.earned_weight}/{criterion.weight}</p>
         {action}
+        <p class="muted">{html.escape(criterion.inference)}</p>
         <ul>{evidence}</ul>
+        {rejected}
       </article>
     """
 
 
 def _narrative(result: AnalysisResult) -> str:
+    if result.outcome == "INVALID_INPUT":
+        return (
+            "The policy or packet could not be evaluated because the input is invalid. "
+            "No readiness determination was made; correct the listed issues and re-run."
+        )
+    if result.outcome == "POLICY_MISMATCH":
+        return (
+            f"The selected policy {result.policy_id} does not apply to this request "
+            "(service code, status, or effective period). Select an applicable policy."
+        )
+    if result.outcome == "NEEDS_REVIEW" and not result.best_pathway.missing_criteria:
+        return (
+            "Some evidence is conflicting, ambiguous, or unverifiable. A qualified reviewer "
+            "must resolve the flagged items; the packet is not treated as ready."
+        )
     if result.best_pathway.missing_criteria:
         return (
             f"The requested {result.service_name} is not ready for payer submission under "

@@ -1,0 +1,106 @@
+{
+  "entry": [
+    {
+      "resource": {
+        "birthDate": "1970-01-01",
+        "gender": "unknown",
+        "id": "synthetic-001",
+        "name": [
+          {
+            "family": "Patient",
+            "given": [
+              "Synthetic"
+            ]
+          }
+        ],
+        "resourceType": "Patient"
+      }
+    },
+    {
+      "resource": {
+        "authoredOn": "2026-09-12",
+        "code": {
+          "coding": [
+            {
+              "code": "73721",
+              "system": "http://www.ama-assn.org/go/cpt"
+            }
+          ]
+        },
+        "id": "sr-1",
+        "intent": "order",
+        "resourceType": "ServiceRequest",
+        "status": "active",
+        "subject": {
+          "reference": "Patient/synthetic-001"
+        }
+      }
+    },
+    {
+      "resource": {
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "code": "M25.561",
+              "system": "http://hl7.org/fhir/sid/icd-10-cm"
+            }
+          ]
+        },
+        "id": "cond-knee",
+        "recordedDate": "2026-08-01",
+        "resourceType": "Condition",
+        "subject": {
+          "reference": "Patient/synthetic-001"
+        }
+      }
+    },
+    {
+      "resource": {
+        "date": "2026-09-01",
+        "description": "Physical therapy completed for six weeks with NSAID trial. Persistent pain with catching and limited range of motion.",
+        "id": "doc-pt",
+        "resourceType": "DocumentReference",
+        "status": "current",
+        "subject": {
+          "reference": "Patient/synthetic-001"
+        },
+        "type": {
+          "coding": [
+            {
+              "code": "11506-3",
+              "system": "http://loinc.org"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "resource": {
+        "code": {
+          "coding": [
+            {
+              "code": "73562",
+              "system": "http://www.ama-assn.org/go/cpt"
+            }
+          ]
+        },
+        "id": "proc-xray",
+        "performedDateTime": "2026-06-13",
+        "resourceType": "Procedure",
+        "status": "completed",
+        "subject": {
+          "reference": "Patient/synthetic-001"
+        }
+      }
+    }
+  ],
+  "resourceType": "Bundle",
+  "type": "collection"
+}

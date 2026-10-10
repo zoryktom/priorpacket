@@ -1,0 +1,840 @@
+{
+  "benchmark": "PriorPacket synthetic benchmark",
+  "cases": [
+    {
+      "bundle": "bundles/A01-msk-ready-standard.json",
+      "category": "A_positive",
+      "description": "All standard-pathway criteria met.",
+      "expected": {
+        "issue_codes": [],
+        "missing_criteria": [],
+        "outcome": "READY",
+        "risk_band": "low",
+        "score_percent": 100
+      },
+      "id": "A01-msk-ready-standard",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/A02-msk-ready-trauma.json",
+      "category": "A_positive",
+      "description": "Urgent trauma pathway satisfied without prior-treatment notes.",
+      "expected": {
+        "issue_codes": [],
+        "missing_criteria": [],
+        "outcome": "READY",
+        "risk_band": "low",
+        "score_percent": 100
+      },
+      "id": "A02-msk-ready-trauma",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/A03-cgm-ready.json",
+      "category": "A_positive",
+      "description": "All mandatory criteria met; optional education absent.",
+      "expected": {
+        "issue_codes": [],
+        "missing_criteria": [],
+        "outcome": "READY",
+        "risk_band": "low",
+        "score_percent": 100
+      },
+      "id": "A03-cgm-ready",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/A04-cgm-boundary-value.json",
+      "category": "A_positive",
+      "description": "HbA1c exactly at the 7.0 % threshold qualifies (>=).",
+      "expected": {
+        "issue_codes": [],
+        "missing_criteria": [],
+        "outcome": "READY",
+        "risk_band": "low",
+        "score_percent": 100
+      },
+      "id": "A04-cgm-boundary-value",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/A05-cgm-boundary-window.json",
+      "category": "A_positive",
+      "description": "HbA1c exactly 90 days old is inside the inclusive window.",
+      "expected": {
+        "issue_codes": [],
+        "missing_criteria": [],
+        "outcome": "READY",
+        "risk_band": "low",
+        "score_percent": 100
+      },
+      "id": "A05-cgm-boundary-window",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/A06-cgm-unit-alias.json",
+      "category": "A_positive",
+      "description": "Unit alias 'percent' is accepted.",
+      "expected": {
+        "issue_codes": [],
+        "missing_criteria": [],
+        "outcome": "READY",
+        "risk_band": "low",
+        "score_percent": 100
+      },
+      "id": "A06-cgm-unit-alias",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/A07-msk-duplicate-identical.json",
+      "category": "A_positive",
+      "description": "An exact duplicate resource is de-duplicated, not penalized.",
+      "expected": {
+        "issue_codes": [
+          "DUPLICATE_RESOURCE"
+        ],
+        "missing_criteria": [],
+        "outcome": "READY",
+        "risk_band": "low",
+        "score_percent": 100
+      },
+      "id": "A07-msk-duplicate-identical",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/B01-msk-missing-xray.json",
+      "category": "B_missing",
+      "description": "No radiograph.",
+      "expected": {
+        "issue_codes": [
+          "MISSING_EVIDENCE"
+        ],
+        "missing_criteria": [
+          "recent-xray"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "moderate",
+        "score_percent": 76
+      },
+      "id": "B01-msk-missing-xray",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/B02-msk-missing-prior-treatment.json",
+      "category": "B_missing",
+      "description": "No prior-treatment document.",
+      "expected": {
+        "issue_codes": [
+          "MISSING_EVIDENCE"
+        ],
+        "missing_criteria": [
+          "prior-treatment-evidence"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "moderate",
+        "score_percent": 65
+      },
+      "id": "B02-msk-missing-prior-treatment",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/B03-msk-missing-diagnosis.json",
+      "category": "B_missing",
+      "description": "No qualifying diagnosis.",
+      "expected": {
+        "issue_codes": [
+          "MISSING_EVIDENCE"
+        ],
+        "missing_criteria": [
+          "knee-pain-diagnosis"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "moderate",
+        "score_percent": 76
+      },
+      "id": "B03-msk-missing-diagnosis",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/B04-msk-missing-mechanical.json",
+      "category": "B_missing",
+      "description": "Prior treatment documented but no mechanical symptoms.",
+      "expected": {
+        "issue_codes": [
+          "MISSING_EVIDENCE"
+        ],
+        "missing_criteria": [
+          "mechanical-symptoms"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "moderate",
+        "score_percent": 82
+      },
+      "id": "B04-msk-missing-mechanical",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/B05-msk-only-patient-and-request.json",
+      "category": "B_missing",
+      "description": "Only patient and order; no clinical evidence.",
+      "expected": {
+        "issue_codes": [
+          "MISSING_EVIDENCE"
+        ],
+        "missing_criteria": [
+          "knee-pain-diagnosis",
+          "recent-xray",
+          "prior-treatment-evidence",
+          "mechanical-symptoms"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "high",
+        "score_percent": 0
+      },
+      "id": "B05-msk-only-patient-and-request",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/B06-msk-xray-expired.json",
+      "category": "B_missing",
+      "description": "Radiograph 91 days old, outside the 90-day window.",
+      "expected": {
+        "issue_codes": [
+          "EVIDENCE_OUTSIDE_WINDOW"
+        ],
+        "missing_criteria": [
+          "recent-xray"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "moderate",
+        "score_percent": 76
+      },
+      "id": "B06-msk-xray-expired",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/B07-cgm-missing-hba1c.json",
+      "category": "B_missing",
+      "description": "No HbA1c result.",
+      "expected": {
+        "issue_codes": [
+          "MISSING_EVIDENCE"
+        ],
+        "missing_criteria": [
+          "recent-hba1c"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "high",
+        "score_percent": 60
+      },
+      "id": "B07-cgm-missing-hba1c",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/B08-cgm-hba1c-below-threshold.json",
+      "category": "B_missing",
+      "description": "HbA1c 6.8 % does not meet >= 7.0.",
+      "expected": {
+        "issue_codes": [
+          "VALUE_OUT_OF_RANGE"
+        ],
+        "missing_criteria": [
+          "recent-hba1c"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "high",
+        "score_percent": 60
+      },
+      "id": "B08-cgm-hba1c-below-threshold",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/B09-cgm-hba1c-expired.json",
+      "category": "B_missing",
+      "description": "Qualifying HbA1c is 91 days old.",
+      "expected": {
+        "issue_codes": [
+          "EVIDENCE_OUTSIDE_WINDOW"
+        ],
+        "missing_criteria": [
+          "recent-hba1c"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "high",
+        "score_percent": 60
+      },
+      "id": "B09-cgm-hba1c-expired",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/B10-cgm-missing-insulin.json",
+      "category": "B_missing",
+      "description": "No insulin therapy documented.",
+      "expected": {
+        "issue_codes": [
+          "MISSING_EVIDENCE"
+        ],
+        "missing_criteria": [
+          "insulin-therapy"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "high",
+        "score_percent": 67
+      },
+      "id": "B10-cgm-missing-insulin",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/B11-cgm-missing-diagnosis.json",
+      "category": "B_missing",
+      "description": "No diabetes diagnosis.",
+      "expected": {
+        "issue_codes": [
+          "MISSING_EVIDENCE"
+        ],
+        "missing_criteria": [
+          "diabetes-diagnosis"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "high",
+        "score_percent": 73
+      },
+      "id": "B11-cgm-missing-diagnosis",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/B12-cgm-request-for-other-service.json",
+      "category": "B_missing",
+      "description": "Packet orders a different service code.",
+      "expected": {
+        "issue_codes": [
+          "SERVICE_CODE_MISMATCH"
+        ],
+        "missing_criteria": [],
+        "outcome": "INCOMPLETE",
+        "risk_band": "moderate",
+        "score_percent": 100
+      },
+      "id": "B12-cgm-request-for-other-service",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/B13-cgm-no-service-request.json",
+      "category": "B_missing",
+      "description": "Packet has no ServiceRequest.",
+      "expected": {
+        "issue_codes": [
+          "MISSING_SERVICE_REQUEST",
+          "NO_REFERENCE_DATE",
+          "POLICY_EFFECTIVE_DATE_UNVERIFIABLE"
+        ],
+        "missing_criteria": [],
+        "outcome": "INCOMPLETE",
+        "risk_band": "high",
+        "score_percent": 27
+      },
+      "id": "B13-cgm-no-service-request",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/B14-cgm-entered-in-error.json",
+      "category": "B_missing",
+      "description": "The only HbA1c is marked entered-in-error.",
+      "expected": {
+        "issue_codes": [
+          "RESOURCE_STATUS_INVALID"
+        ],
+        "missing_criteria": [
+          "recent-hba1c"
+        ],
+        "outcome": "INCOMPLETE",
+        "risk_band": "high",
+        "score_percent": 60
+      },
+      "id": "B14-cgm-entered-in-error",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/C01-cgm-unit-mismatch.json",
+      "category": "C_review",
+      "description": "HbA1c reported in mg/dL, not %.",
+      "expected": {
+        "issue_codes": [
+          "UNIT_MISMATCH"
+        ],
+        "missing_criteria": [],
+        "outcome": "NEEDS_REVIEW",
+        "risk_band": "high",
+        "score_percent": 60
+      },
+      "id": "C01-cgm-unit-mismatch",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/C02-cgm-unit-missing.json",
+      "category": "C_review",
+      "description": "HbA1c has no unit.",
+      "expected": {
+        "issue_codes": [
+          "UNIT_MISSING"
+        ],
+        "missing_criteria": [],
+        "outcome": "NEEDS_REVIEW",
+        "risk_band": "high",
+        "score_percent": 60
+      },
+      "id": "C02-cgm-unit-missing",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/C03-cgm-conflicting-values.json",
+      "category": "C_review",
+      "description": "Two in-window HbA1c values straddle the threshold.",
+      "expected": {
+        "issue_codes": [
+          "CONFLICTING_EVIDENCE",
+          "VALUE_OUT_OF_RANGE"
+        ],
+        "missing_criteria": [],
+        "outcome": "NEEDS_REVIEW",
+        "risk_band": "high",
+        "score_percent": 60
+      },
+      "id": "C03-cgm-conflicting-values",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/C04-cgm-code-system-mismatch.json",
+      "category": "C_review",
+      "description": "HbA1c coded in a non-LOINC system.",
+      "expected": {
+        "issue_codes": [
+          "CODE_SYSTEM_MISMATCH"
+        ],
+        "missing_criteria": [],
+        "outcome": "NEEDS_REVIEW",
+        "risk_band": "high",
+        "score_percent": 60
+      },
+      "id": "C04-cgm-code-system-mismatch",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/C05-msk-wrong-patient-xray.json",
+      "category": "C_review",
+      "description": "Radiograph belongs to a different patient.",
+      "expected": {
+        "issue_codes": [
+          "UNRESOLVED_REFERENCE",
+          "WRONG_PATIENT"
+        ],
+        "missing_criteria": [],
+        "outcome": "NEEDS_REVIEW",
+        "risk_band": "moderate",
+        "score_percent": 76
+      },
+      "id": "C05-msk-wrong-patient-xray",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/C06-msk-contradicted-treatment.json",
+      "category": "C_review",
+      "description": "A note says the patient refused physical therapy.",
+      "expected": {
+        "issue_codes": [
+          "CONFLICTING_EVIDENCE",
+          "CONTRADICTED_BY_RECORD"
+        ],
+        "missing_criteria": [],
+        "outcome": "NEEDS_REVIEW",
+        "risk_band": "moderate",
+        "score_percent": 65
+      },
+      "id": "C06-msk-contradicted-treatment",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/C07-msk-undated-xray.json",
+      "category": "C_review",
+      "description": "Radiograph has no date, so the window cannot be checked.",
+      "expected": {
+        "issue_codes": [
+          "MISSING_DATE"
+        ],
+        "missing_criteria": [],
+        "outcome": "NEEDS_REVIEW",
+        "risk_band": "moderate",
+        "score_percent": 76
+      },
+      "id": "C07-msk-undated-xray",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/C08-cgm-duplicate-id-conflict.json",
+      "category": "C_review",
+      "description": "Two different resources share one id.",
+      "expected": {
+        "issue_codes": [
+          "DUPLICATE_ID_CONFLICT"
+        ],
+        "missing_criteria": [],
+        "outcome": "NEEDS_REVIEW",
+        "risk_band": "high",
+        "score_percent": 60
+      },
+      "id": "C08-cgm-duplicate-id-conflict",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/C09-cgm-unresolved-reference.json",
+      "category": "C_review",
+      "description": "A report cites a result that is not in the packet.",
+      "expected": {
+        "issue_codes": [
+          "UNRESOLVED_REFERENCE"
+        ],
+        "missing_criteria": [],
+        "outcome": "NEEDS_REVIEW",
+        "risk_band": "moderate",
+        "score_percent": 100
+      },
+      "id": "C09-cgm-unresolved-reference",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/D01-input-not-a-bundle.json",
+      "category": "D_invalid",
+      "description": "Input is a JSON array, not a Bundle.",
+      "expected": {
+        "issue_codes": [
+          "NOT_A_BUNDLE"
+        ],
+        "missing_criteria": [],
+        "outcome": "INVALID_INPUT",
+        "risk_band": "high",
+        "score_percent": 0
+      },
+      "id": "D01-input-not-a-bundle",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/D02-input-empty-bundle.json",
+      "category": "D_invalid",
+      "description": "Bundle has no entries.",
+      "expected": {
+        "issue_codes": [
+          "EMPTY_BUNDLE"
+        ],
+        "missing_criteria": [],
+        "outcome": "INVALID_INPUT",
+        "risk_band": "high",
+        "score_percent": 0
+      },
+      "id": "D02-input-empty-bundle",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/D03-input-no-patient.json",
+      "category": "D_invalid",
+      "description": "Bundle has no Patient.",
+      "expected": {
+        "issue_codes": [
+          "MISSING_PATIENT"
+        ],
+        "missing_criteria": [],
+        "outcome": "INVALID_INPUT",
+        "risk_band": "high",
+        "score_percent": 0
+      },
+      "id": "D03-input-no-patient",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/D04-input-malformed-resource.json",
+      "category": "D_invalid",
+      "description": "An entry resource is not an object.",
+      "expected": {
+        "issue_codes": [
+          "MALFORMED_RESOURCE"
+        ],
+        "missing_criteria": [],
+        "outcome": "INVALID_INPUT",
+        "risk_band": "high",
+        "score_percent": 0
+      },
+      "id": "D04-input-malformed-resource",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/D05-policy-unknown-field.json",
+      "category": "D_invalid",
+      "description": "Policy has an unknown rule field.",
+      "expected": {
+        "issue_codes": [
+          "POLICY_INVALID"
+        ],
+        "missing_criteria": [],
+        "outcome": "INVALID_INPUT",
+        "risk_band": "high",
+        "score_percent": 0
+      },
+      "id": "D05-policy-unknown-field",
+      "policy": "policies/D05-policy-unknown-field.policy.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/D06-policy-unsupported-schema.json",
+      "category": "D_invalid",
+      "description": "Policy schema_version is unsupported.",
+      "expected": {
+        "issue_codes": [
+          "POLICY_UNSUPPORTED_SCHEMA_VERSION"
+        ],
+        "missing_criteria": [],
+        "outcome": "INVALID_INPUT",
+        "risk_band": "high",
+        "score_percent": 0
+      },
+      "id": "D06-policy-unsupported-schema",
+      "policy": "policies/D06-policy-unsupported-schema.policy.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/D07-policy-contradictory-range.json",
+      "category": "D_invalid",
+      "description": "Policy value range can never be satisfied.",
+      "expected": {
+        "issue_codes": [
+          "POLICY_INVALID"
+        ],
+        "missing_criteria": [],
+        "outcome": "INVALID_INPUT",
+        "risk_band": "high",
+        "score_percent": 0
+      },
+      "id": "D07-policy-contradictory-range",
+      "policy": "policies/D07-policy-contradictory-range.policy.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/D08-policy-missing-field.json",
+      "category": "D_invalid",
+      "description": "Policy is missing 'pathways'.",
+      "expected": {
+        "issue_codes": [
+          "POLICY_INVALID"
+        ],
+        "missing_criteria": [],
+        "outcome": "INVALID_INPUT",
+        "risk_band": "high",
+        "score_percent": 0
+      },
+      "id": "D08-policy-missing-field",
+      "policy": "policies/D08-policy-missing-field.policy.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/E01-msk-service-not-in-policy.json",
+      "category": "E_mismatch",
+      "description": "Requested code is not covered by the policy.",
+      "expected": {
+        "issue_codes": [
+          "SERVICE_NOT_IN_POLICY"
+        ],
+        "missing_criteria": [],
+        "outcome": "POLICY_MISMATCH",
+        "risk_band": "high",
+        "score_percent": 100
+      },
+      "id": "E01-msk-service-not-in-policy",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "72148",
+      "workflow": "msk"
+    },
+    {
+      "bundle": "bundles/E02-policy-inactive.json",
+      "category": "E_mismatch",
+      "description": "Policy is inactive.",
+      "expected": {
+        "issue_codes": [
+          "POLICY_NOT_ACTIVE"
+        ],
+        "missing_criteria": [],
+        "outcome": "POLICY_MISMATCH",
+        "risk_band": "high",
+        "score_percent": 100
+      },
+      "id": "E02-policy-inactive",
+      "policy": "policies/E02-policy-inactive.policy.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/E03-policy-not-yet-effective.json",
+      "category": "E_mismatch",
+      "description": "Request predates the effective period.",
+      "expected": {
+        "issue_codes": [
+          "DATE_AFTER_REQUEST",
+          "POLICY_NOT_EFFECTIVE"
+        ],
+        "missing_criteria": [],
+        "outcome": "POLICY_MISMATCH",
+        "risk_band": "high",
+        "score_percent": 27
+      },
+      "id": "E03-policy-not-yet-effective",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/E04-policy-expired.json",
+      "category": "E_mismatch",
+      "description": "Request is after the effective period.",
+      "expected": {
+        "issue_codes": [
+          "EVIDENCE_OUTSIDE_WINDOW",
+          "POLICY_NOT_EFFECTIVE"
+        ],
+        "missing_criteria": [
+          "recent-hba1c"
+        ],
+        "outcome": "POLICY_MISMATCH",
+        "risk_band": "high",
+        "score_percent": 60
+      },
+      "id": "E04-policy-expired",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/E05-policy-retired.json",
+      "category": "E_mismatch",
+      "description": "Policy is retired.",
+      "expected": {
+        "issue_codes": [
+          "POLICY_NOT_ACTIVE"
+        ],
+        "missing_criteria": [],
+        "outcome": "POLICY_MISMATCH",
+        "risk_band": "high",
+        "score_percent": 100
+      },
+      "id": "E05-policy-retired",
+      "policy": "policies/E05-policy-retired.policy.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/F01-cgm-irrelevant-extras.json",
+      "category": "F_robustness",
+      "description": "Unrelated resources must not change the outcome.",
+      "expected": {
+        "issue_codes": [],
+        "missing_criteria": [],
+        "outcome": "READY",
+        "risk_band": "low",
+        "score_percent": 100
+      },
+      "id": "F01-cgm-irrelevant-extras",
+      "policy": "policies/diabetes_cgm.json",
+      "service_code": "E2103",
+      "workflow": "cgm"
+    },
+    {
+      "bundle": "bundles/F02-msk-unattributed-document.json",
+      "category": "F_robustness",
+      "description": "Legacy documents without a subject are accepted with a warning.",
+      "expected": {
+        "issue_codes": [
+          "UNATTRIBUTED_EVIDENCE"
+        ],
+        "missing_criteria": [],
+        "outcome": "READY",
+        "risk_band": "low",
+        "score_percent": 100
+      },
+      "id": "F02-msk-unattributed-document",
+      "policy": "policies/msk_knee_mri.json",
+      "service_code": "73721",
+      "workflow": "msk"
+    }
+  ],
+  "note": "All patients, resources, and policies are synthetic. Not clinical or payer guidance.",
+  "synthetic": true,
+  "version": "1.0.0"
+}

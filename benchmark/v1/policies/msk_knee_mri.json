@@ -1,0 +1,115 @@
+{
+  "criteria": [
+    {
+      "code_systems": [
+        "http://hl7.org/fhir/sid/icd-10-cm"
+      ],
+      "codes": [
+        "M25.561",
+        "M23.91",
+        "S83.91XA"
+      ],
+      "id": "knee-pain-diagnosis",
+      "kind": "condition",
+      "label": "Knee pain or internal derangement diagnosis",
+      "missing_action": "Add a current diagnosis supporting the requested knee MRI.",
+      "weight": 20
+    },
+    {
+      "code_systems": [
+        "http://www.ama-assn.org/go/cpt"
+      ],
+      "codes": [
+        "73560",
+        "73562",
+        "73564"
+      ],
+      "id": "recent-xray",
+      "kind": "procedure",
+      "label": "Recent knee radiograph",
+      "missing_action": "Attach a knee radiograph report from the last 90 days.",
+      "weight": 20,
+      "within_days": 90
+    },
+    {
+      "conflict_keywords": [
+        "refused physical therapy",
+        "did not attend physical therapy"
+      ],
+      "id": "prior-treatment-evidence",
+      "keywords": [
+        "physical therapy",
+        "six weeks",
+        "nsaid"
+      ],
+      "kind": "document",
+      "label": "Documented prior treatment attempt",
+      "missing_action": "Collect notes documenting the required prior treatment attempt.",
+      "require_all_keywords": true,
+      "weight": 30,
+      "within_days": 180
+    },
+    {
+      "id": "mechanical-symptoms",
+      "keywords": [
+        "locking",
+        "catching",
+        "instability",
+        "limited range of motion"
+      ],
+      "kind": "document",
+      "label": "Mechanical symptoms or functional limitation",
+      "missing_action": "Document mechanical symptoms or functional limitation.",
+      "weight": 15
+    },
+    {
+      "code_systems": [
+        "http://hl7.org/fhir/sid/icd-10-cm"
+      ],
+      "codes": [
+        "S83.91XA",
+        "S89.91XA"
+      ],
+      "id": "acute-trauma",
+      "kind": "condition",
+      "label": "Acute knee trauma",
+      "missing_action": "Add a trauma diagnosis if the urgent pathway is used.",
+      "weight": 25
+    }
+  ],
+  "effective_end": "2026-12-31",
+  "effective_start": "2026-01-01",
+  "pathways": [
+    {
+      "id": "standard-pathway",
+      "label": "Standard MRI pathway",
+      "requires": [
+        "knee-pain-diagnosis",
+        "recent-xray",
+        "prior-treatment-evidence",
+        "mechanical-symptoms"
+      ]
+    },
+    {
+      "id": "trauma-pathway",
+      "label": "Urgent MRI after acute trauma",
+      "requires": [
+        "knee-pain-diagnosis",
+        "recent-xray",
+        "acute-trauma",
+        "mechanical-symptoms"
+      ]
+    }
+  ],
+  "payer": "Synthetic Demo Health Plan",
+  "policy_id": "bench-msk-knee-mri",
+  "policy_version": "1.0.0",
+  "schema_version": 1,
+  "service": {
+    "codes": [
+      "73721"
+    ],
+    "name": "MRI lower extremity joint without contrast"
+  },
+  "status": "active"
+}

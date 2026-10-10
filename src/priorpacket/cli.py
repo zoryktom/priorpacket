@@ -9,8 +9,8 @@ from .batch import write_batch_report
 from .engine import PacketBuilder, analyze_request
 from .policy import PolicyError, load_bundle, load_policy, validate_policy
 from .render import write_outputs
-from .validator import CompletenessScorer
 from .validation import run_validation_suite
+from .validator import CompletenessScorer
 
 
 def _load_json(path: str | Path) -> dict:
@@ -61,6 +61,27 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path to a validation manifest.",
     )
     product.add_argument("--out", default="reports/validation", help="Output directory.")
+
+    bench = subcommands.add_parser("benchmark", help="Run the synthetic benchmark and counterfactual checks.")
+    bench.add_argument("--manifest", default="benchmark/v1/manifest.json", help="Benchmark manifest.")
+    bench.add_argument("--out", default="reports/benchmark", help="Output directory.")
+    bench.add_argument(
+        "--write-reference",
+        action="store_true",
+        help="Overwrite the committed reference metrics (maintainers only).",
+    )
+
+    repro = subcommands.add_parser("reproduce", help="Re-run the benchmark and compare to committed reference metrics.")
+    repro.add_argument("--manifest", default="benchmark/v1/manifest.json", help="Benchmark manifest.")
+    repro.add_argument("--reference", default="benchmark/v1/reference_metrics.json", help="Reference metrics file.")
+    repro.add_argument("--out", default="reports/reproduce", help="Output directory.")
+
+    demo = subcommands.add_parser("demo", help="Run a three-case demonstration on synthetic data.")
+    demo.add_argument("--out", default="reports/demo", help="Output directory.")
+
+    fhir = subcommands.add_parser("validate-fhir", help="Run layered structural/profile/terminology checks on a Bundle.")
+    fhir.add_argument("bundle", help="Path to a FHIR Bundle JSON file.")
+    fhir.add_argument("--pas", action="store_true", help="Also check Da Vinci PAS request-bundle expectations.")
 
     serve = subcommands.add_parser("serve", help="Run the local review console.")
     serve.add_argument("--host", default="127.0.0.1", help="Host interface.")
@@ -135,6 +156,53 @@ def main(argv: list[str] | None = None) -> None:
             outputs = run_validation_suite(args.manifest, args.out)
             for label, path in outputs.items():
                 print(f"{label}: {path}")
+        elif args.command == "benchmark":
+            from .benchmark import canonical_json, reference_summary, run_benchmark, write_reports
+            from .counterfactual import run_counterfactuals, write_counterfactual_report
+
+            report = run_benchmark(args.manifest)
+            counterfactual = run_counterfactuals(args.manifest)
+            outputs = write_reports(report, args.out)
+            outputs["counterfactual"] = write_counterfactual_report(counterfactual, args.out)
+            if args.write_reference:
+                reference = Path(args.manifest).parent / "reference_metrics.json"
+                reference.write_text(canonical_json(reference_summary(report)), encoding="utf-8")
+                print(f"reference: {reference}")
+            metrics = report["metrics"]
+            print(f"Cases fully matching: {metrics['cases_passed']['numerator']}/{metrics['cases_passed']['denominator']}")
+            print(f"Outcome accuracy: {metrics['outcome_accuracy']['numerator']}/{metrics['outcome_accuracy']['denominator']}")
+            print(f"False READY: {metrics['false_ready']['numerator']}/{metrics['false_ready']['denominator']}")
+            print(f"Counterfactual checks held: {counterfactual['held']}/{counterfactual['checks']}")
+            for label, path in outputs.items():
+                print(f"{label}: {path}")
+            if metrics["cases_passed"]["numerator"] != metrics["total_cases"] or counterfactual["held"] != counterfactual["checks"]:
+                raise SystemExit(1)
+        elif args.command == "reproduce":
+            from .benchmark import reproduce
+
+            ok, differences = reproduce(args.manifest, args.reference, args.out)
+            if not ok:
+                print("Reproduction FAILED:")
+                for difference in differences:
+                    print(f"- {difference}")
+                raise SystemExit(1)
+            print(f"Reproduction OK: results match {args.reference}")
+        elif args.command == "demo":
+            from .demo import run_demo
+
+            for row in run_demo(args.out):
+                print(f"{row['case']}: {row['outcome']} (expected {row['expected_outcome']}) -> {row['output']}")
+        elif args.command == "validate-fhir":
+            from .fhir_validation import validate_fhir_bundle
+
+            try:
+                bundle = _load_json(args.bundle)
+            except json.JSONDecodeError as exc:
+                raise PolicyError(f"FHIR bundle is not valid JSON: {args.bundle}") from exc
+            report = validate_fhir_bundle(bundle, expect_pas=args.pas)
+            print(_dump_json(report))
+            if not report["valid"]:
+                raise SystemExit(1)
         elif args.command == "serve":
             from .server import run_server
 

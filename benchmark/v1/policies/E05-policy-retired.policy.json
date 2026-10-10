@@ -1,0 +1,90 @@
+{
+  "criteria": [
+    {
+      "code_systems": [
+        "http://hl7.org/fhir/sid/icd-10-cm"
+      ],
+      "codes": [
+        "E11.65",
+        "E11.9",
+        "E11.8"
+      ],
+      "id": "diabetes-diagnosis",
+      "kind": "condition",
+      "label": "Type 2 diabetes diagnosis",
+      "missing_action": "Add a current diabetes diagnosis.",
+      "weight": 20
+    },
+    {
+      "code_systems": [
+        "http://loinc.org"
+      ],
+      "codes": [
+        "4548-4"
+      ],
+      "id": "recent-hba1c",
+      "kind": "observation",
+      "label": "Hemoglobin A1c at or above 7.0 % within 90 days",
+      "missing_action": "Attach an HbA1c result of at least 7.0 % from the last 90 days.",
+      "operator": ">=",
+      "unit": "%",
+      "unit_aliases": [
+        "percent"
+      ],
+      "value": 7.0,
+      "weight": 30,
+      "within_days": 90
+    },
+    {
+      "code_systems": [
+        "http://www.nlm.nih.gov/research/umls/rxnorm"
+      ],
+      "codes": [
+        "261551",
+        "253182"
+      ],
+      "id": "insulin-therapy",
+      "kind": "medication",
+      "label": "Current insulin therapy",
+      "missing_action": "Document current insulin therapy.",
+      "weight": 25,
+      "within_days": 365
+    },
+    {
+      "id": "diabetes-education",
+      "keywords": [
+        "diabetes education"
+      ],
+      "kind": "document",
+      "label": "Diabetes education (optional)",
+      "missing_action": "Consider documenting diabetes self-management education.",
+      "required": false,
+      "weight": 10
+    }
+  ],
+  "effective_end": "2026-12-31",
+  "effective_start": "2026-01-01",
+  "pathways": [
+    {
+      "id": "standard-pathway",
+      "label": "Insulin-treated diabetes pathway",
+      "requires": [
+        "diabetes-diagnosis",
+        "recent-hba1c",
+        "insulin-therapy",
+        "diabetes-education"
+      ]
+    }
+  ],
+  "payer": "Synthetic Demo Health Plan",
+  "policy_id": "bench-diabetes-cgm",
+  "policy_version": "1.0.0",
+  "schema_version": 1,
+  "service": {
+    "codes": [
+      "E2103"
+    ],
+    "name": "Continuous glucose monitor"
+  },
+  "status": "retired"
+}

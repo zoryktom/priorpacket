@@ -1,13 +1,21 @@
 from __future__ import annotations
 
-from datetime import date, datetime
+from dataclasses import dataclass
+from datetime import date, datetime, timezone
 from typing import Any
 
 from priorpacket.models import PatientSummary
 
 
 def bundle_entries(bundle: dict[str, Any]) -> list[dict[str, Any]]:
-    return [entry.get("resource", {}) for entry in bundle.get("entry", [])]
+    entries = bundle.get("entry", [])
+    if not isinstance(entries, list):
+        return []
+    return [
+        entry["resource"]
+        for entry in entries
+        if isinstance(entry, dict) and isinstance(entry.get("resource"), dict)
+    ]
 
 
 def resources_by_type(bundle: dict[str, Any], resource_type: str) -> list[dict[str, Any]]:
@@ -120,7 +128,101 @@ def days_between(later: str | None, earlier: str | None) -> int | None:
 
 
 def today_iso() -> str:
-    return datetime.utcnow().date().isoformat()
+    return datetime.now(timezone.utc).date().isoformat()
+
+
+@dataclass(frozen=True)
+class DateInfo:
+    """Outcome of reading a resource's clinical date.
+
+    ``status`` is one of ``ok``, ``missing``, ``ambiguous`` (present but not a full
+    calendar date) or ``conflicting`` (two fields for the same event disagree).
+    """
+
+    value: str | None
+    status: str
+    detail: str = ""
+
+
+_DATE_FIELDS = (
+    "effectiveDateTime",
+    "authoredOn",
+    "performedDateTime",
+    "occurrenceDateTime",
+    "date",
+    "created",
+    "recordedDate",
+    "onsetDateTime",
+)
+_PERIOD_FIELDS = ("performedPeriod", "effectivePeriod")
+_SAME_EVENT_FIELDS = (
+    ("effectiveDateTime", "effectivePeriod.start"),
+    ("performedDateTime", "performedPeriod.start"),
+)
+
+
+def parse_day(value: Any) -> date | None:
+    """Parse a full FHIR date or dateTime to a calendar day; partial dates return None."""
+    if not isinstance(value, str) or len(value) < 10:
+        return None
+    if len(value) > 10 and value[10] != "T":
+        return None
+    try:
+        return date.fromisoformat(value[:10])
+    except ValueError:
+        return None
+
+
+def resource_date_info(resource: dict[str, Any]) -> DateInfo:
+    found: list[tuple[str, Any]] = []
+    for field_name in _DATE_FIELDS:
+        if resource.get(field_name) is not None:
+            found.append((field_name, resource[field_name]))
+    for period_name in _PERIOD_FIELDS:
+        period = resource.get(period_name)
+        if isinstance(period, dict) and period.get("start") is not None:
+            found.append((f"{period_name}.start", period["start"]))
+    if not found:
+        return DateInfo(None, "missing", "no date or timestamp present")
+
+    by_name = dict(found)
+    for first, second in _SAME_EVENT_FIELDS:
+        if first in by_name and second in by_name:
+            left, right = parse_day(by_name[first]), parse_day(by_name[second])
+            if left and right and left != right:
+                return DateInfo(
+                    None,
+                    "conflicting",
+                    f"{first}={left.isoformat()} disagrees with {second}={right.isoformat()}",
+                )
+
+    name, raw = found[0]
+    parsed = parse_day(raw)
+    if parsed is None:
+        return DateInfo(None, "ambiguous", f"{name}={raw!r} is not a complete calendar date")
+    return DateInfo(parsed.isoformat(), "ok", name)
+
+
+def parse_reference(reference: Any) -> tuple[str | None, str | None]:
+    """Split a FHIR reference into (resource type, id); urn references return (None, urn)."""
+    if not isinstance(reference, str) or not reference.strip() or reference.startswith("#"):
+        return None, None
+    if reference.startswith("urn:"):
+        return None, reference
+    parts = reference.split("?")[0].split("/")
+    if "_history" in parts:
+        parts = parts[: parts.index("_history")]
+    if len(parts) >= 2 and parts[-1]:
+        return parts[-2], parts[-1]
+    return None, reference
+
+
+def subject_reference(resource: dict[str, Any]) -> str | None:
+    for key in ("subject", "patient", "beneficiary"):
+        node = resource.get(key)
+        if isinstance(node, dict) and isinstance(node.get("reference"), str):
+            return node["reference"]
+    return None
 
 
 def text_blob(resource: dict[str, Any]) -> str:

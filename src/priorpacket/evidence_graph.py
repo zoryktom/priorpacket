@@ -44,6 +44,8 @@ def build_evidence_graph(result: AnalysisResult) -> dict[str, Any]:
         "request",
         result.request_id,
         status=result.status,
+        outcome=result.outcome,
+        policy_version=result.policy_version,
         risk_band=result.risk_band,
         score=result.score,
         max_score=result.max_score,
@@ -78,6 +80,8 @@ def build_evidence_graph(result: AnalysisResult) -> dict[str, Any]:
             "criterion",
             criterion.label,
             status=criterion.status,
+            required=criterion.required,
+            inference=criterion.inference,
             weight=criterion.weight,
             earned_weight=criterion.earned_weight,
             rationale=criterion.rationale,
@@ -105,12 +109,50 @@ def build_evidence_graph(result: AnalysisResult) -> dict[str, Any]:
                 "supported_by",
                 detail=hit.detail,
                 date=hit.date,
+                selection_reason=hit.selection_reason,
+                attribution=hit.attribution,
+                provenance="observed",
             )
+
+        for rejected in criterion.rejected:
+            resource_id = f"fhir:{rejected.resource_type}/{rejected.resource_id}"
+            add_node(
+                resource_id,
+                "fhir_resource",
+                f"{rejected.resource_type}/{rejected.resource_id}",
+                resource_type=rejected.resource_type,
+                resource_id=rejected.resource_id,
+            )
+            add_edge(
+                criterion_id,
+                resource_id,
+                "rejected_resource",
+                reason=rejected.reason_code,
+                detail=rejected.detail,
+                provenance="observed",
+            )
+
+        if not criterion.evidence and criterion.status != "met":
+            absence_id = f"absence:{criterion.criterion_id}"
+            add_node(
+                absence_id,
+                "evidence_absence",
+                f"No qualifying evidence for {criterion.label}",
+                note="Absence from the packet is not proof the event did not occur.",
+            )
+            add_edge(criterion_id, absence_id, "lacks_evidence", provenance="inferred")
 
         if criterion.missing_action:
             action_id = f"action:{criterion.criterion_id}"
             add_node(action_id, "missing_action", criterion.missing_action)
             add_edge(criterion_id, action_id, "needs_action")
+
+    for index, issue in enumerate(result.issues):
+        if issue.severity not in {"error", "warning"}:
+            continue
+        issue_id = f"issue:{index}:{issue.code}"
+        add_node(issue_id, "issue", issue.code, severity=issue.severity, message=issue.message)
+        add_edge(request_id, issue_id, "has_issue")
 
     return {
         "schema": "priorpacket.evidence_graph.v1",

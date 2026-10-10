@@ -8,11 +8,11 @@ from pathlib import Path
 from typing import Any
 
 from .engine import analyze_request
-from .policy import PolicyError, validate_bundle, validate_policy
+from .policy import PolicyError
 from .render import render_html
 
-
-ROOT = Path(__file__).resolve().parents[1]
+# src/priorpacket/server.py -> repository root (examples/ and benchmark/ live there)
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def run_server(host: str = "127.0.0.1", port: int = 8787, open_browser: bool = False) -> None:
@@ -25,7 +25,7 @@ def run_server(host: str = "127.0.0.1", port: int = 8787, open_browser: bool = F
 
 
 class ReviewHandler(BaseHTTPRequestHandler):
-    server_version = "PriorPacket/0.1"
+    server_version = "PriorPacket/0.5"
 
     def do_GET(self) -> None:
         if self.path == "/" or self.path.startswith("/?"):
@@ -33,6 +33,9 @@ class ReviewHandler(BaseHTTPRequestHandler):
             return
         if self.path == "/api/examples":
             self._send_json(_examples_payload())
+            return
+        if self.path == "/api/benchmark":
+            self._send_json(_benchmark_payload())
             return
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
@@ -47,12 +50,7 @@ class ReviewHandler(BaseHTTPRequestHandler):
             policy = payload["policy"]
             bundle = payload["bundle"]
             service_code = str(payload["service_code"])
-            policy_errors = validate_policy(policy)
-            if policy_errors:
-                raise PolicyError("Policy validation failed: " + "; ".join(policy_errors))
-            bundle_errors = validate_bundle(bundle)
-            if bundle_errors:
-                raise PolicyError("FHIR bundle validation failed: " + "; ".join(bundle_errors))
+            # Invalid policies and bundles are reported as an INVALID_INPUT outcome, not an error.
             result = analyze_request(
                 policy=policy,
                 bundle=bundle,
@@ -84,21 +82,39 @@ class ReviewHandler(BaseHTTPRequestHandler):
 
 
 def _examples_payload() -> dict[str, Any]:
-    manifest_path = ROOT / "examples/cases/manifest.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     cases: list[dict[str, Any]] = []
-    for case in manifest["cases"]:
-        cases.append(
-            {
-                "id": case["id"],
-                "label": case["label"],
-                "service_code": case["service_code"],
-                "expected": case["expected"],
-                "policy": json.loads((ROOT / case["policy"]).read_text(encoding="utf-8")),
-                "bundle": json.loads((ROOT / case["bundle"]).read_text(encoding="utf-8")),
-            }
-        )
+    for manifest_rel, group in (
+        ("benchmark/v1/manifest.json", "benchmark"),
+        ("examples/cases/manifest.json", "legacy"),
+    ):
+        manifest_path = ROOT / manifest_rel
+        if not manifest_path.exists():
+            continue
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        base = manifest_path.parent if group == "benchmark" else ROOT
+        for case in manifest["cases"]:
+            label = case.get("label") or f"{case['id']}: {case.get('description', '')}"
+            cases.append(
+                {
+                    "id": case["id"],
+                    "group": group,
+                    "workflow": case.get("workflow", "msk"),
+                    "label": f"[{group}] {label}",
+                    "service_code": case["service_code"],
+                    "expected": case["expected"],
+                    "policy": json.loads((base / case["policy"]).read_text(encoding="utf-8")),
+                    "bundle": json.loads((base / case["bundle"]).read_text(encoding="utf-8")),
+                }
+            )
     return {"cases": cases}
+
+
+def _benchmark_payload() -> dict[str, Any]:
+    reference = ROOT / "benchmark/v1/reference_metrics.json"
+    if not reference.exists():
+        return {"available": False}
+    data = json.loads(reference.read_text(encoding="utf-8"))
+    return {"available": True, "metrics": data["metrics"], "digest": data["result_digest_sha256"]}
 
 
 INDEX_HTML = """<!doctype html>
@@ -131,6 +147,9 @@ INDEX_HTML = """<!doctype html>
       color: white;
       padding: 24px clamp(18px, 4vw, 56px);
     }
+    .banner { font-weight: 700; color: #ffd98a; }
+    .st-READY { color: var(--green); }
+    .st-INCOMPLETE, .st-NEEDS_REVIEW, .st-INVALID_INPUT, .st-POLICY_MISMATCH { color: var(--red); }
     h1 { margin: 0; font-size: clamp(26px, 4vw, 40px); letter-spacing: 0; }
     header p { margin: 8px 0 0; color: #d8e2f0; }
     main {
@@ -232,6 +251,7 @@ INDEX_HTML = """<!doctype html>
   <header>
     <h1>PriorPacket Review Console</h1>
     <p>Local evidence-completeness review for prior authorization packets.</p>
+    <p class="banner">Synthetic data only. This console organizes evidence for qualified review and never decides coverage.</p>
   </header>
   <main>
     <section>
@@ -249,12 +269,21 @@ INDEX_HTML = """<!doctype html>
     </section>
     <section>
       <div class="summary">
-        <div class="metric"><span>Status</span><strong id="status">-</strong></div>
+        <div class="metric"><span>Outcome</span><strong id="status">-</strong></div>
         <div class="metric"><span>Risk</span><strong id="risk">-</strong></div>
         <div class="metric"><span>Score</span><strong id="score">-</strong></div>
         <div class="metric"><span>Pathway</span><strong id="pathway">-</strong></div>
       </div>
-      <iframe id="packet"></iframe>
+      <p id="comparison" class="note"></p>
+      <button id="baselineButton" type="button">Set current result as baseline</button>
+      <button id="downloadButton" type="button">Download result JSON</button>
+      <h2>Criteria</h2>
+      <ul id="criteria"></ul>
+      <h2>Issues</h2>
+      <ul id="issues"></ul>
+      <h2>Benchmark (committed reference)</h2>
+      <div id="benchmark" class="note">Loading...</div>
+      <iframe id="packet" sandbox></iframe>
     </section>
   </main>
   <script>
@@ -268,6 +297,63 @@ INDEX_HTML = """<!doctype html>
     function setError(message) {
       error.textContent = message;
       error.style.display = message ? "block" : "none";
+    }
+
+    let lastResult = null;
+    let baseline = null;
+
+    function renderResult(result) {
+      lastResult = result;
+      const status = document.getElementById("status");
+      status.className = "st-" + result.outcome;
+      const list = document.getElementById("criteria");
+      list.textContent = "";
+      result.criteria.forEach((c) => {
+        const li = document.createElement("li");
+        const evidence = c.evidence.map((e) => e.source_reference).join(", ") || "no qualifying evidence";
+        li.textContent = `${c.label}${c.required ? "" : " (optional)"}: ${c.status.toUpperCase()} - ${c.rationale} [${evidence}]`;
+        list.appendChild(li);
+      });
+      const issues = document.getElementById("issues");
+      issues.textContent = "";
+      const all = result.issues.concat(...result.criteria.map((c) => c.issues));
+      all.filter((i) => i.severity !== "info").forEach((i) => {
+        const li = document.createElement("li");
+        li.textContent = `${i.code} (${i.severity}): ${i.message}`;
+        issues.appendChild(li);
+      });
+      const cmp = document.getElementById("comparison");
+      if (baseline) {
+        const changed = result.criteria.filter((c, n) => baseline.criteria[n] && baseline.criteria[n].status !== c.status)
+          .map((c) => c.criterion_id);
+        cmp.textContent = `Baseline ${baseline.outcome} -> current ${result.outcome}; changed criteria: ${changed.join(", ") || "none"}`;
+      } else {
+        cmp.textContent = "";
+      }
+    }
+
+    document.getElementById("baselineButton").addEventListener("click", () => {
+      baseline = lastResult;
+    });
+    document.getElementById("downloadButton").addEventListener("click", () => {
+      if (!lastResult) return;
+      const blob = new Blob([JSON.stringify(lastResult, null, 2)], { type: "application/json" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "priorpacket-result.json";
+      link.click();
+    });
+
+    async function loadBenchmark() {
+      const box = document.getElementById("benchmark");
+      const data = await (await fetch("/api/benchmark")).json();
+      if (!data.available) { box.textContent = "No committed reference metrics found."; return; }
+      const m = data.metrics;
+      const labels = m.confusion_matrix.labels;
+      const rows = labels.map((e) => e + ": " + labels.map((a) => m.confusion_matrix.rows_expected_cols_actual[e][a]).join(" / "));
+      box.textContent = `Outcome accuracy ${m.outcome_accuracy.numerator}/${m.outcome_accuracy.denominator}; ` +
+        `false READY ${m.false_ready.numerator}/${m.false_ready.denominator}. ` +
+        `Confusion (expected: ${labels.join(" / ")}) -> ` + rows.join(" | ") + `. Digest ${data.digest.slice(0, 12)}`;
     }
 
     function loadCase(index) {
@@ -312,7 +398,8 @@ INDEX_HTML = """<!doctype html>
           setError(data.error);
           return;
         }
-        document.getElementById("status").textContent = data.result.status;
+        renderResult(data.result);
+        document.getElementById("status").textContent = data.result.outcome;
         document.getElementById("risk").textContent = data.result.risk_band;
         document.getElementById("score").textContent = data.result.score_percent + "%";
         document.getElementById("pathway").textContent = data.result.best_pathway.label;
@@ -323,6 +410,7 @@ INDEX_HTML = """<!doctype html>
     });
 
     boot();
+    loadBenchmark();
   </script>
 </body>
 </html>

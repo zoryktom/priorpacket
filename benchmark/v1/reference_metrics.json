@@ -1,0 +1,410 @@
+{
+  "benchmark_version": "1.0.0",
+  "engine_version": "0.5.0",
+  "metrics": {
+    "by_category": {
+      "A_positive": {
+        "cases": 7,
+        "cases_passed": {
+          "denominator": 7,
+          "numerator": 7,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 7,
+          "numerator": 7,
+          "value": 1.0
+        }
+      },
+      "B_missing": {
+        "cases": 14,
+        "cases_passed": {
+          "denominator": 14,
+          "numerator": 14,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 14,
+          "numerator": 14,
+          "value": 1.0
+        }
+      },
+      "C_review": {
+        "cases": 9,
+        "cases_passed": {
+          "denominator": 9,
+          "numerator": 9,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 9,
+          "numerator": 9,
+          "value": 1.0
+        }
+      },
+      "D_invalid": {
+        "cases": 8,
+        "cases_passed": {
+          "denominator": 8,
+          "numerator": 8,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 8,
+          "numerator": 8,
+          "value": 1.0
+        }
+      },
+      "E_mismatch": {
+        "cases": 5,
+        "cases_passed": {
+          "denominator": 5,
+          "numerator": 5,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 5,
+          "numerator": 5,
+          "value": 1.0
+        }
+      },
+      "F_robustness": {
+        "cases": 2,
+        "cases_passed": {
+          "denominator": 2,
+          "numerator": 2,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 2,
+          "numerator": 2,
+          "value": 1.0
+        }
+      }
+    },
+    "by_policy": {
+      "D05-policy-unknown-field.policy.json": {
+        "cases": 1,
+        "cases_passed": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        }
+      },
+      "D06-policy-unsupported-schema.policy.json": {
+        "cases": 1,
+        "cases_passed": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        }
+      },
+      "D07-policy-contradictory-range.policy.json": {
+        "cases": 1,
+        "cases_passed": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        }
+      },
+      "D08-policy-missing-field.policy.json": {
+        "cases": 1,
+        "cases_passed": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        }
+      },
+      "E02-policy-inactive.policy.json": {
+        "cases": 1,
+        "cases_passed": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        }
+      },
+      "E05-policy-retired.policy.json": {
+        "cases": 1,
+        "cases_passed": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 1,
+          "numerator": 1,
+          "value": 1.0
+        }
+      },
+      "diabetes_cgm.json": {
+        "cases": 25,
+        "cases_passed": {
+          "denominator": 25,
+          "numerator": 25,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 25,
+          "numerator": 25,
+          "value": 1.0
+        }
+      },
+      "msk_knee_mri.json": {
+        "cases": 14,
+        "cases_passed": {
+          "denominator": 14,
+          "numerator": 14,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 14,
+          "numerator": 14,
+          "value": 1.0
+        }
+      }
+    },
+    "by_workflow": {
+      "cgm": {
+        "cases": 31,
+        "cases_passed": {
+          "denominator": 31,
+          "numerator": 31,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 31,
+          "numerator": 31,
+          "value": 1.0
+        }
+      },
+      "msk": {
+        "cases": 14,
+        "cases_passed": {
+          "denominator": 14,
+          "numerator": 14,
+          "value": 1.0
+        },
+        "outcome_accuracy": {
+          "denominator": 14,
+          "numerator": 14,
+          "value": 1.0
+        }
+      }
+    },
+    "cases_passed": {
+      "denominator": 45,
+      "numerator": 45,
+      "value": 1.0
+    },
+    "confusion_matrix": {
+      "labels": [
+        "READY",
+        "INCOMPLETE",
+        "NEEDS_REVIEW",
+        "INVALID_INPUT",
+        "POLICY_MISMATCH"
+      ],
+      "rows_expected_cols_actual": {
+        "INCOMPLETE": {
+          "INCOMPLETE": 14,
+          "INVALID_INPUT": 0,
+          "NEEDS_REVIEW": 0,
+          "POLICY_MISMATCH": 0,
+          "READY": 0
+        },
+        "INVALID_INPUT": {
+          "INCOMPLETE": 0,
+          "INVALID_INPUT": 8,
+          "NEEDS_REVIEW": 0,
+          "POLICY_MISMATCH": 0,
+          "READY": 0
+        },
+        "NEEDS_REVIEW": {
+          "INCOMPLETE": 0,
+          "INVALID_INPUT": 0,
+          "NEEDS_REVIEW": 9,
+          "POLICY_MISMATCH": 0,
+          "READY": 0
+        },
+        "POLICY_MISMATCH": {
+          "INCOMPLETE": 0,
+          "INVALID_INPUT": 0,
+          "NEEDS_REVIEW": 0,
+          "POLICY_MISMATCH": 5,
+          "READY": 0
+        },
+        "READY": {
+          "INCOMPLETE": 0,
+          "INVALID_INPUT": 0,
+          "NEEDS_REVIEW": 0,
+          "POLICY_MISMATCH": 0,
+          "READY": 9
+        }
+      }
+    },
+    "evidence_traceability": {
+      "denominator": 97,
+      "numerator": 97,
+      "value": 1.0
+    },
+    "false_blocked": {
+      "denominator": 9,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "false_ready": {
+      "denominator": 36,
+      "numerator": 0,
+      "value": 0.0
+    },
+    "invalid_input_detection": {
+      "denominator": 8,
+      "numerator": 8,
+      "value": 1.0
+    },
+    "issue_code_exact_match": {
+      "denominator": 45,
+      "numerator": 45,
+      "value": 1.0
+    },
+    "macro_f1_defined_classes": 1.0,
+    "missing_criteria": {
+      "exact_match": {
+        "denominator": 45,
+        "numerator": 45,
+        "value": 1.0
+      },
+      "f1": 1.0,
+      "precision": {
+        "denominator": 16,
+        "numerator": 16,
+        "value": 1.0
+      },
+      "recall": {
+        "denominator": 16,
+        "numerator": 16,
+        "value": 1.0
+      },
+      "support": 16
+    },
+    "outcome_accuracy": {
+      "denominator": 45,
+      "numerator": 45,
+      "value": 1.0
+    },
+    "per_class": {
+      "INCOMPLETE": {
+        "f1": 1.0,
+        "precision": {
+          "denominator": 14,
+          "numerator": 14,
+          "value": 1.0
+        },
+        "recall": {
+          "denominator": 14,
+          "numerator": 14,
+          "value": 1.0
+        },
+        "support": 14
+      },
+      "INVALID_INPUT": {
+        "f1": 1.0,
+        "precision": {
+          "denominator": 8,
+          "numerator": 8,
+          "value": 1.0
+        },
+        "recall": {
+          "denominator": 8,
+          "numerator": 8,
+          "value": 1.0
+        },
+        "support": 8
+      },
+      "NEEDS_REVIEW": {
+        "f1": 1.0,
+        "precision": {
+          "denominator": 9,
+          "numerator": 9,
+          "value": 1.0
+        },
+        "recall": {
+          "denominator": 9,
+          "numerator": 9,
+          "value": 1.0
+        },
+        "support": 9
+      },
+      "POLICY_MISMATCH": {
+        "f1": 1.0,
+        "precision": {
+          "denominator": 5,
+          "numerator": 5,
+          "value": 1.0
+        },
+        "recall": {
+          "denominator": 5,
+          "numerator": 5,
+          "value": 1.0
+        },
+        "support": 5
+      },
+      "READY": {
+        "f1": 1.0,
+        "precision": {
+          "denominator": 9,
+          "numerator": 9,
+          "value": 1.0
+        },
+        "recall": {
+          "denominator": 9,
+          "numerator": 9,
+          "value": 1.0
+        },
+        "support": 9
+      }
+    },
+    "policy_mismatch_detection": {
+      "denominator": 5,
+      "numerator": 5,
+      "value": 1.0
+    },
+    "risk_band_accuracy": {
+      "denominator": 45,
+      "numerator": 45,
+      "value": 1.0
+    },
+    "score_mean_absolute_error": {
+      "cases_scored": 45,
+      "value": 0.0
+    },
+    "total_cases": 45
+  },
+  "result_digest_sha256": "739f6599338873d37cb15e850e6b0b42ec5f47ff517416ea84a3d47486c8c9f2",
+  "schema": "priorpacket.benchmark.v1"
+}

@@ -4,7 +4,6 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-
 PAS_CLAIM_PROFILE = "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/profile-claim"
 PAS_REQUEST_BUNDLE_PROFILE = (
     "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/profile-pas-request-bundle"

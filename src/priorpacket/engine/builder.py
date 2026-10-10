@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import uuid
 from dataclasses import dataclass
 from typing import Any, Iterable
 
@@ -15,14 +16,9 @@ from priorpacket.fhir import (
     ClaimItem,
     ClaimSupportingInfo,
     CodeableConcept,
-    Coding,
-    Coverage,
-    Observation,
-    Quantity,
     Reference,
     codeable_concept,
 )
-
 
 ICD10_CM = "http://hl7.org/fhir/sid/icd-10-cm"
 LOINC = "http://loinc.org"
@@ -159,7 +155,7 @@ class PacketBuilder:
             id=bundle_id,
             timestamp=policy.request_date,
             entry=[
-                BundleEntry(fullUrl=f"urn:uuid:{resource['resourceType']}-{resource['id']}", resource=resource)
+                BundleEntry(fullUrl=f"urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, resource['resourceType'] + '/' + str(resource['id']))}", resource=resource)
                 for resource in bundle_resources
             ],
         )

@@ -10,7 +10,6 @@ from pathlib import Path
 from priorpacket.engine import PacketBuilder
 from priorpacket.validator import CompletenessScorer
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 

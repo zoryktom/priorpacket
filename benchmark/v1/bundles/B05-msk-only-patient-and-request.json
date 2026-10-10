@@ -1,0 +1,42 @@
+{
+  "entry": [
+    {
+      "resource": {
+        "birthDate": "1970-01-01",
+        "gender": "unknown",
+        "id": "synthetic-001",
+        "name": [
+          {
+            "family": "Patient",
+            "given": [
+              "Synthetic"
+            ]
+          }
+        ],
+        "resourceType": "Patient"
+      }
+    },
+    {
+      "resource": {
+        "authoredOn": "2026-09-12",
+        "code": {
+          "coding": [
+            {
+              "code": "73721",
+              "system": "http://www.ama-assn.org/go/cpt"
+            }
+          ]
+        },
+        "id": "sr-1",
+        "intent": "order",
+        "resourceType": "ServiceRequest",
+        "status": "active",
+        "subject": {
+          "reference": "Patient/synthetic-001"
+        }
+      }
+    }
+  ],
+  "resourceType": "Bundle",
+  "type": "collection"
+}

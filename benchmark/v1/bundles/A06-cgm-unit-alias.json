@@ -1,0 +1,110 @@
+{
+  "entry": [
+    {
+      "resource": {
+        "birthDate": "1970-01-01",
+        "gender": "unknown",
+        "id": "synthetic-001",
+        "name": [
+          {
+            "family": "Patient",
+            "given": [
+              "Synthetic"
+            ]
+          }
+        ],
+        "resourceType": "Patient"
+      }
+    },
+    {
+      "resource": {
+        "authoredOn": "2026-09-12",
+        "code": {
+          "coding": [
+            {
+              "code": "E2103",
+              "system": "https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets"
+            }
+          ]
+        },
+        "id": "sr-1",
+        "intent": "order",
+        "resourceType": "ServiceRequest",
+        "status": "active",
+        "subject": {
+          "reference": "Patient/synthetic-001"
+        }
+      }
+    },
+    {
+      "resource": {
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "code": "E11.65",
+              "system": "http://hl7.org/fhir/sid/icd-10-cm"
+            }
+          ]
+        },
+        "id": "cond-t2dm",
+        "recordedDate": "2026-08-01",
+        "resourceType": "Condition",
+        "subject": {
+          "reference": "Patient/synthetic-001"
+        }
+      }
+    },
+    {
+      "resource": {
+        "authoredOn": "2026-06-01",
+        "id": "med-insulin",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "code": "261551",
+              "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+            }
+          ]
+        },
+        "resourceType": "MedicationRequest",
+        "status": "active",
+        "subject": {
+          "reference": "Patient/synthetic-001"
+        }
+      }
+    },
+    {
+      "resource": {
+        "code": {
+          "coding": [
+            {
+              "code": "4548-4",
+              "system": "http://loinc.org"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-08-20",
+        "id": "obs-a1c",
+        "resourceType": "Observation",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/synthetic-001"
+        },
+        "valueQuantity": {
+          "unit": "percent",
+          "value": 8.2
+        }
+      }
+    }
+  ],
+  "resourceType": "Bundle",
+  "type": "collection"
+}

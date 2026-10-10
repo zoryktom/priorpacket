@@ -67,6 +67,7 @@ def _write_csv(path: Path, results: list[AnalysisResult]) -> None:
         "request_id",
         "patient_id",
         "service_code",
+        "outcome",
         "status",
         "risk_band",
         "score_percent",
@@ -84,6 +85,7 @@ def _write_csv(path: Path, results: list[AnalysisResult]) -> None:
                     "request_id": result.request_id,
                     "patient_id": result.patient.patient_id,
                     "service_code": result.service_code,
+                    "outcome": result.outcome,
                     "status": result.status,
                     "risk_band": result.risk_band,
                     "score_percent": result.score_percent,
@@ -97,26 +99,22 @@ def _write_csv(path: Path, results: list[AnalysisResult]) -> None:
 
 def _render_summary(results: list[AnalysisResult]) -> str:
     total = len(results)
-    ready = sum(1 for result in results if result.status == "ready_for_review")
-    needs = sum(1 for result in results if result.status == "needs_evidence")
-    not_ready = sum(1 for result in results if result.status == "not_ready")
-    mismatch = sum(1 for result in results if result.status == "policy_mismatch")
     lines = [
         "# PriorPacket Batch Summary",
         "",
         f"- Total packets: {total}",
-        f"- Ready for review: {ready}",
-        f"- Needs evidence: {needs}",
-        f"- Not ready: {not_ready}",
-        f"- Policy mismatch: {mismatch}",
+    ]
+    for outcome in ("READY", "INCOMPLETE", "NEEDS_REVIEW", "POLICY_MISMATCH", "INVALID_INPUT"):
+        lines.append(f"- {outcome}: {sum(1 for result in results if result.outcome == outcome)}")
+    lines += [
         "",
-        "| Request | Status | Risk | Score | Missing actions |",
+        "| Request | Outcome | Risk | Score | Missing actions |",
         "| --- | --- | --- | ---: | --- |",
     ]
     for result in results:
         actions = "; ".join(result.missing_actions) or "None"
         lines.append(
-            f"| {result.request_id} | {result.status} | {result.risk_band} | "
+            f"| {result.request_id} | {result.outcome} | {result.risk_band} | "
             f"{result.score_percent}% | {actions} |"
         )
     lines.append("")

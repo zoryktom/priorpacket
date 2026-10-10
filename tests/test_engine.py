@@ -8,7 +8,6 @@ from priorpacket.davinci import build_gap_task
 from priorpacket.engine import analyze_request
 from priorpacket.policy import load_bundle, load_policy
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 

@@ -14,7 +14,6 @@ from priorpacket.policy import load_bundle, load_policy, validate_policy
 from priorpacket.render import write_outputs
 from priorpacket.validation import run_validation_suite
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 

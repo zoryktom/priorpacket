@@ -2,9 +2,9 @@
   "id": "onc-breast-her2-biologic",
   "title": "HER2-positive metastatic breast cancer biologic authorization",
   "service": {
-    "system": "https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
+    "system": "http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
     "code": "J9355",
-    "display": "Injection, trastuzumab"
+    "display": "Inj trastuzumab excl biosimi"
   },
   "criteria": {
     "diagnoses": [
@@ -16,25 +16,28 @@
     ],
     "procedures": [
       {
-        "system": "https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
+        "system": "http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
         "code": "J9355",
-        "display": "Injection, trastuzumab"
+        "display": "Inj trastuzumab excl biosimi"
       }
     ],
     "labs": [
       {
-        "loinc": "48642-3",
-        "name": "HER2 [Interpretation] in Tissue",
+        "loinc": "48676-1",
+        "name": "HER2 Ag [Interpretation] in Tissue",
         "min": 3,
         "unit": "score"
       }
     ],
     "treatments": [
       {
-        "system": "https://priorpacket.dev/fhir/CodeSystem/prior-therapy",
-        "code": "taxane-therapy",
-        "display": "Prior taxane therapy",
-        "statuses": ["failed", "intolerant"]
+        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "code": "56946",
+        "display": "paclitaxel",
+        "statuses": [
+          "failed",
+          "intolerant"
+        ]
       }
     ],
     "notes": [

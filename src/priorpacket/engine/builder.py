@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import hashlib
-import uuid
+import re
 from dataclasses import dataclass
 from typing import Any, Iterable
 
@@ -22,7 +22,22 @@ from priorpacket.fhir import (
 
 ICD10_CM = "http://hl7.org/fhir/sid/icd-10-cm"
 LOINC = "http://loinc.org"
-HCPCS = "https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets"
+HCPCS = "http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets"
+PAS_TEMP_CODES = "http://hl7.org/fhir/us/davinci-pas/CodeSystem/PASTempCodes"
+PAS_EXT = "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-"
+X12_BASE = "https://codesystem.x12.org/005010/"
+POS_SYSTEM = "https://www.cms.gov/Medicare/Coding/place-of-service-codes/Place_of_Service_Code_Set"
+IDENTIFIER_BASE = "https://priorpacket.invalid/fhir/identifier/"
+FULL_URL_BASE = "https://priorpacket.invalid/fhir/"
+# Report type for non-document evidence; value taken from the X12 755 code list. VERIFY against the payer's PWK usage.
+REPORT_TYPE_NOTE = ("PY", "Physician's Report")
+REPORT_TYPE_OTHER = ("OZ", "Support Data for Claim")
+# Service-line defaults copied from the published PAS Claim example; override per rule. VERIFY for each service.
+DEFAULT_REQUEST_TYPE = ("IN", "Initial Medical Services Reservation")
+DEFAULT_CERTIFICATION_TYPE = ("I", "Initial")
+DEFAULT_SERVICE_CATEGORY = ("1", "Medical Care")
+DEFAULT_PLACE_OF_SERVICE = "11"
+_SYSTEM_ALIASES = {"https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets": HCPCS}
 SNOMED = "http://snomed.info/sct"
 PRIORPACKET_SYSTEM = "https://priorpacket.dev/fhir/CodeSystem/evidence"
 
@@ -38,7 +53,7 @@ class ClinicalCode(EngineModel):
     text: str | None = None
 
     def to_codeable_concept(self) -> CodeableConcept:
-        return codeable_concept(self.system, self.code, self.display, self.text)
+        return codeable_concept(_SYSTEM_ALIASES.get(self.system or "", self.system), self.code, self.display, self.text)
 
     @property
     def key(self) -> tuple[str | None, str]:
@@ -90,6 +105,10 @@ class PolicyRule(EngineModel):
     required_labs: list[LabCriterion] = Field(default_factory=list)
     prerequisite_treatments: list[TreatmentCriterion] = Field(default_factory=list)
     required_notes: list[NoteCriterion] = Field(default_factory=list)
+    request_type: str = DEFAULT_REQUEST_TYPE[0]
+    certification_type: str = DEFAULT_CERTIFICATION_TYPE[0]
+    service_category: str = DEFAULT_SERVICE_CATEGORY[0]
+    place_of_service: str = DEFAULT_PLACE_OF_SERVICE
     request_date: str = "2026-01-01T00:00:00Z"
     payer: str = "Organization/payer"
     provider: str = "Organization/requesting-provider"
@@ -153,9 +172,10 @@ class PacketBuilder:
         bundle_id = deterministic_id("bundle", patient.get("id"), policy.id)
         return Bundle(
             id=bundle_id,
+            identifier={"system": IDENTIFIER_BASE + "bundle", "value": bundle_id},
             timestamp=policy.request_date,
             entry=[
-                BundleEntry(fullUrl=f"urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, resource['resourceType'] + '/' + str(resource['id']))}", resource=resource)
+                BundleEntry(fullUrl=f"{FULL_URL_BASE}{resource['resourceType']}/{resource['id']}", resource=resource)
                 for resource in bundle_resources
             ],
         )
@@ -199,13 +219,28 @@ class PacketBuilder:
             ClaimDiagnosis(
                 sequence=index,
                 diagnosisCodeableConcept=CodeableConcept.model_validate(resource["code"]),
-                type=[codeable_concept(PRIORPACKET_SYSTEM, "principal-diagnosis")],
+                type=[codeable_concept(PAS_TEMP_CODES, "principal")],
             )
             for index, resource in enumerate(selected.diagnoses, start=1)
         ]
         item_codes = policy.required_procedures or [policy.requested_service]
+        service_date = policy.request_date[:10]
         claim_items = [
-            ClaimItem(sequence=index, productOrService=code.to_codeable_concept())
+            ClaimItem(
+                sequence=index,
+                productOrService=code.to_codeable_concept(),
+                servicedDate=service_date,
+                extension=[
+                    _x12_extension("serviceItemRequestType", "1525", policy.request_type, DEFAULT_REQUEST_TYPE),
+                    _x12_extension("certificationType", "1322", policy.certification_type, DEFAULT_CERTIFICATION_TYPE),
+                ],
+                category=codeable_concept(
+                    X12_BASE + "1365",
+                    policy.service_category,
+                    DEFAULT_SERVICE_CATEGORY[1] if policy.service_category == DEFAULT_SERVICE_CATEGORY[0] else None,
+                ),
+                locationCodeableConcept=codeable_concept(POS_SYSTEM, policy.place_of_service),
+            )
             for index, code in enumerate(item_codes, start=1)
         ]
         supporting_info = make_supporting_info(selected)
@@ -220,6 +255,7 @@ class PacketBuilder:
             )
         return Claim(
             id=claim_id,
+            identifier=[{"system": IDENTIFIER_BASE + "claim", "value": claim_id}],
             patient=Reference(reference=f"Patient/{patient['id']}"),
             created=policy.request_date,
             provider=Reference(reference=policy.provider),
@@ -326,10 +362,17 @@ def find_note(resources: list[dict[str, Any]], criterion: NoteCriterion) -> dict
     matches = [
         resource
         for resource in resources
-        if resource.get("resourceType") in {"Encounter", "Observation", "DocumentReference", "DiagnosticReport"}
+        if resource.get("resourceType") in {"DocumentReference", "DiagnosticReport"}
         and needle in flatten_text(resource).casefold()
     ]
     return sorted(matches, key=resource_sort_key)[-1] if matches else None
+
+
+def _x12_extension(name: str, code_system: str, code: str, default: tuple[str, str]) -> dict[str, Any]:
+    coding: dict[str, Any] = {"system": X12_BASE + code_system, "code": code}
+    if code == default[0]:
+        coding["display"] = default[1]
+    return {"url": PAS_EXT + name, "valueCodeableConcept": {"coding": [coding]}}
 
 
 def make_supporting_info(selection: EvidenceSelection) -> list[ClaimSupportingInfo]:
@@ -340,17 +383,32 @@ def make_supporting_info(selection: EvidenceSelection) -> list[ClaimSupportingIn
     items.extend(("physician-note", resource) for resource in selection.notes)
     supporting_info = []
     for sequence, (category, resource) in enumerate(items, start=1):
-        code = resource.get("code")
+        report_type = REPORT_TYPE_NOTE if resource.get("resourceType") == "DocumentReference" else REPORT_TYPE_OTHER
         supporting_info.append(
             ClaimSupportingInfo(
                 sequence=sequence,
-                category=codeable_concept(PRIORPACKET_SYSTEM, category),
-                code=CodeableConcept.model_validate(code) if isinstance(code, dict) else None,
-                timingDate=resource.get("effectiveDateTime") or resource.get("recordedDate"),
+                category=codeable_concept(PAS_TEMP_CODES, "additionalInformation"),
+                extension=[_document_information(report_type, category, resource)],
                 valueReference=Reference(reference=f"{resource['resourceType']}/{resource['id']}"),
             )
         )
     return supporting_info
+
+
+def _document_information(report_type: tuple[str, str], category: str, resource: dict[str, Any]) -> dict[str, Any]:
+    description = re.sub(r"\s+", " ", f"{category}: {resource['resourceType']}/{resource['id']}").strip()
+    return {
+        "url": PAS_EXT + "documentInformation",
+        "extension": [
+            {
+                "url": "reportTypeCode",
+                "valueCodeableConcept": {
+                    "coding": [{"system": X12_BASE + "755", "code": report_type[0], "display": report_type[1]}]
+                },
+            },
+            {"url": "description", "valueString": description},
+        ],
+    }
 
 
 def has_code(codeable: Any, criterion: ClinicalCode) -> bool:

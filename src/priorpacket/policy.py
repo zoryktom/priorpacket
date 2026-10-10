@@ -29,6 +29,7 @@ KNOWN_CODE_SYSTEMS: dict[str, re.Pattern[str]] = {
     "http://hl7.org/fhir/sid/icd-10-cm": _ICD10,
     "http://www.ama-assn.org/go/cpt": _CPT,
     "https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets": _HCPCS,
+    "http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets": _HCPCS,
     "http://loinc.org": _LOINC,
     "http://www.nlm.nih.gov/research/umls/rxnorm": _DIGITS,
     "http://snomed.info/sct": _DIGITS,

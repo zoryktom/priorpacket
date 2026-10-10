@@ -1,0 +1,28 @@
+FHIR Validation tool Version 7.0.1 (Git# d8783284409e). Built 2026-10-08T03:33:12.303Z (40 hours old)
+  Java:   17.0.20.1 from /private/tmp/fv/jdk-17.0.20.1+1-jre/Contents/Home on aarch64 (64bit). 2048MB available
+  Paths:  Current = /Users/zoryktomykola/allerclean/copilot-worktrees/priorpacket/zoryktom-vigilant-sniffle, Package Cache = /Users/zoryktomykola/.fhir/packages
+  Params: -version 4.0.1 /Users/zoryktomykola/allerclean/copilot-worktrees/priorpacket/zoryktom-vigilant-sniffle/examples/fhir/knee_mri_bundle.json -output /tmp/vout3/knee_mri_bundle.outcome.json
+  Locale: United States/US
+  Jurisdiction: United States of America
+Loading
+  Loading FHIR v4.0.1 from hl7.fhir.r4.core#4.0.1
+  Load hl7.terminology.r4#6.2.0 - 4288 resources (00:04.787)
+  Load hl7.fhir.uv.extensions.r4#5.2.0 - 759 resources (00:01.095)
+  Loaded FHIR - 8265 resources (00:00.000)
+  Terminology Cache at /var/folders/fv/pvff6_0d7vq1hbvyk0pvdkf00000gn/T/default-tx-cache/r4
+  Terminology server https://tx.fhir.org - Version Connected to Terminology Server at https://tx.fhir.org (00:00.863)
+  Load hl7.terminology#7.4.0 - 4181 resources (00:00.628)
+  Load hl7.fhir.uv.extensions.r5#5.2.0 - 759 resources (00:00.237)
+  Load hl7.terminology.r5#7.1.0 - 4072 resources (00:00.046)
+  Load hl7.fhir.uv.extensions#5.3.0 - 856 resources (00:00.434)
+  Package Summary: [hl7.fhir.r4.core#4.0.1, hl7.fhir.xver-extensions#0.1.0, hl7.terminology.r4#6.2.0, hl7.fhir.uv.extensions.r4#5.2.0, hl7.terminology#7.4.0, hl7.fhir.uv.extensions.r5#5.2.0, hl7.terminology.r5#7.1.0, hl7.fhir.uv.extensions#5.3.0]
+  Get set... 
+  ...go! (00:02.045)
+Cached new session. Cache size = 1
+Sources to validate: /Users/zoryktomykola/allerclean/copilot-worktrees/priorpacket/zoryktom-vigilant-sniffle/examples/fhir/knee_mri_bundle.json
+Validating
+  Validate /Users/zoryktomykola/allerclean/copilot-worktrees/priorpacket/zoryktom-vigilant-sniffle/examples/fhir/knee_mri_bundle.json
+ 00:00.161
+Done. Times: Loading: 00:10.195, validation: 00:00.162. Memory = 437Mb
+
+Done. Times: Loading: 00:10.195, validation: 00:00.162. Max Memory = 2Gb

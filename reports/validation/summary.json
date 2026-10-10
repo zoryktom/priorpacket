@@ -1,0 +1,24 @@
+{
+  "fhir_version": "4.0.1",
+  "files": {
+    "knee_mri_bundle": {
+      "distinct_error_messages": [],
+      "errors": 0,
+      "information": 0,
+      "warnings": 5
+    },
+    "oncology_patient": {
+      "distinct_error_messages": [],
+      "errors": 0,
+      "information": 3,
+      "warnings": 11
+    },
+    "pas_request_bundle": {
+      "distinct_error_messages": [],
+      "errors": 0,
+      "information": 20,
+      "warnings": 23
+    }
+  },
+  "pas_ig": "hl7.fhir.us.davinci-pas#2.2.1"
+}

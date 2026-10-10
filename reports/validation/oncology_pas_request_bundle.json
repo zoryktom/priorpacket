@@ -1,0 +1,570 @@
+{
+  "entry": [
+    {
+      "fullUrl": "https://priorpacket.invalid/fhir/Claim/claim-45fff5d6a36e",
+      "resource": {
+        "created": "2026-02-15T09:00:00Z",
+        "diagnosis": [
+          {
+            "diagnosisCodeableConcept": {
+              "coding": [
+                {
+                  "code": "C50.919",
+                  "display": "Malignant neoplasm of unspecified site of unspecified female breast",
+                  "system": "http://hl7.org/fhir/sid/icd-10-cm"
+                }
+              ]
+            },
+            "sequence": 1,
+            "type": [
+              {
+                "coding": [
+                  {
+                    "code": "principal",
+                    "system": "http://hl7.org/fhir/us/davinci-pas/CodeSystem/PASTempCodes"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "id": "claim-45fff5d6a36e",
+        "identifier": [
+          {
+            "system": "https://priorpacket.invalid/fhir/identifier/claim",
+            "value": "claim-45fff5d6a36e"
+          }
+        ],
+        "insurance": [
+          {
+            "coverage": {
+              "reference": "Coverage/cov-001"
+            },
+            "focal": true,
+            "sequence": 1
+          }
+        ],
+        "insurer": {
+          "reference": "Organization/acme-health-plan"
+        },
+        "item": [
+          {
+            "category": {
+              "coding": [
+                {
+                  "code": "1",
+                  "display": "Medical Care",
+                  "system": "https://codesystem.x12.org/005010/1365"
+                }
+              ]
+            },
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-serviceItemRequestType",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "code": "IN",
+                      "display": "Initial Medical Services Reservation",
+                      "system": "https://codesystem.x12.org/005010/1525"
+                    }
+                  ]
+                }
+              },
+              {
+                "url": "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-certificationType",
+                "valueCodeableConcept": {
+                  "coding": [
+                    {
+                      "code": "I",
+                      "display": "Initial",
+                      "system": "https://codesystem.x12.org/005010/1322"
+                    }
+                  ]
+                }
+              }
+            ],
+            "locationCodeableConcept": {
+              "coding": [
+                {
+                  "code": "11",
+                  "system": "https://www.cms.gov/Medicare/Coding/place-of-service-codes/Place_of_Service_Code_Set"
+                }
+              ]
+            },
+            "productOrService": {
+              "coding": [
+                {
+                  "code": "J9355",
+                  "display": "Inj trastuzumab excl biosimi",
+                  "system": "http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets"
+                }
+              ]
+            },
+            "sequence": 1,
+            "servicedDate": "2026-02-15"
+          }
+        ],
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/profile-claim"
+          ]
+        },
+        "patient": {
+          "reference": "Patient/pat-001"
+        },
+        "priority": {
+          "coding": [
+            {
+              "code": "normal",
+              "system": "http://terminology.hl7.org/CodeSystem/processpriority"
+            }
+          ]
+        },
+        "provider": {
+          "reference": "Organization/northstar-oncology"
+        },
+        "resourceType": "Claim",
+        "status": "active",
+        "supportingInfo": [
+          {
+            "category": {
+              "coding": [
+                {
+                  "code": "additionalInformation",
+                  "system": "http://hl7.org/fhir/us/davinci-pas/CodeSystem/PASTempCodes"
+                }
+              ]
+            },
+            "extension": [
+              {
+                "extension": [
+                  {
+                    "url": "reportTypeCode",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "code": "OZ",
+                          "display": "Support Data for Claim",
+                          "system": "https://codesystem.x12.org/005010/755"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "url": "description",
+                    "valueString": "diagnosis: Condition/cond-001"
+                  }
+                ],
+                "url": "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-documentInformation"
+              }
+            ],
+            "sequence": 1,
+            "valueReference": {
+              "reference": "Condition/cond-001"
+            }
+          },
+          {
+            "category": {
+              "coding": [
+                {
+                  "code": "additionalInformation",
+                  "system": "http://hl7.org/fhir/us/davinci-pas/CodeSystem/PASTempCodes"
+                }
+              ]
+            },
+            "extension": [
+              {
+                "extension": [
+                  {
+                    "url": "reportTypeCode",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "code": "OZ",
+                          "display": "Support Data for Claim",
+                          "system": "https://codesystem.x12.org/005010/755"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "url": "description",
+                    "valueString": "lab: Observation/obs-her2-001"
+                  }
+                ],
+                "url": "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-documentInformation"
+              }
+            ],
+            "sequence": 2,
+            "valueReference": {
+              "reference": "Observation/obs-her2-001"
+            }
+          },
+          {
+            "category": {
+              "coding": [
+                {
+                  "code": "additionalInformation",
+                  "system": "http://hl7.org/fhir/us/davinci-pas/CodeSystem/PASTempCodes"
+                }
+              ]
+            },
+            "extension": [
+              {
+                "extension": [
+                  {
+                    "url": "reportTypeCode",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "code": "OZ",
+                          "display": "Support Data for Claim",
+                          "system": "https://codesystem.x12.org/005010/755"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "url": "description",
+                    "valueString": "prior-treatment: MedicationRequest/medreq-taxane-001"
+                  }
+                ],
+                "url": "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-documentInformation"
+              }
+            ],
+            "sequence": 3,
+            "valueReference": {
+              "reference": "MedicationRequest/medreq-taxane-001"
+            }
+          },
+          {
+            "category": {
+              "coding": [
+                {
+                  "code": "additionalInformation",
+                  "system": "http://hl7.org/fhir/us/davinci-pas/CodeSystem/PASTempCodes"
+                }
+              ]
+            },
+            "extension": [
+              {
+                "extension": [
+                  {
+                    "url": "reportTypeCode",
+                    "valueCodeableConcept": {
+                      "coding": [
+                        {
+                          "code": "PY",
+                          "display": "Physician's Report",
+                          "system": "https://codesystem.x12.org/005010/755"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "url": "description",
+                    "valueString": "physician-note: DocumentReference/doc-onc-note-001"
+                  }
+                ],
+                "url": "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-documentInformation"
+              }
+            ],
+            "sequence": 4,
+            "valueReference": {
+              "reference": "DocumentReference/doc-onc-note-001"
+            }
+          }
+        ],
+        "type": {
+          "coding": [
+            {
+              "code": "professional",
+              "system": "http://terminology.hl7.org/CodeSystem/claim-type"
+            }
+          ]
+        },
+        "use": "preauthorization"
+      }
+    },
+    {
+      "fullUrl": "https://priorpacket.invalid/fhir/Condition/cond-001",
+      "resource": {
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "problem-list-item",
+                "system": "http://terminology.hl7.org/CodeSystem/condition-category"
+              }
+            ]
+          }
+        ],
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active",
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "code": "C50.919",
+              "display": "Malignant neoplasm of unspecified site of unspecified female breast",
+              "system": "http://hl7.org/fhir/sid/icd-10-cm"
+            }
+          ]
+        },
+        "id": "cond-001",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-condition-problems-health-concerns"
+          ]
+        },
+        "recordedDate": "2025-10-08",
+        "resourceType": "Condition",
+        "subject": {
+          "reference": "Patient/pat-001"
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "code": "confirmed",
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "https://priorpacket.invalid/fhir/Coverage/cov-001",
+      "resource": {
+        "beneficiary": {
+          "reference": "Patient/pat-001"
+        },
+        "class": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "group",
+                  "system": "http://terminology.hl7.org/CodeSystem/coverage-class"
+                }
+              ]
+            },
+            "value": "GROUP-SYNTH-01"
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "plan",
+                  "system": "http://terminology.hl7.org/CodeSystem/coverage-class"
+                }
+              ]
+            },
+            "value": "PLAN-SYNTH-01"
+          }
+        ],
+        "id": "cov-001",
+        "identifier": [
+          {
+            "system": "https://acme-health-plan.invalid/member-id",
+            "type": {
+              "coding": [
+                {
+                  "code": "MB",
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203"
+                }
+              ]
+            },
+            "value": "ACME-445566"
+          }
+        ],
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/profile-coverage"
+          ]
+        },
+        "payor": [
+          {
+            "reference": "Organization/acme-health-plan"
+          }
+        ],
+        "relationship": {
+          "coding": [
+            {
+              "code": "self",
+              "system": "http://terminology.hl7.org/CodeSystem/subscriber-relationship"
+            }
+          ]
+        },
+        "resourceType": "Coverage",
+        "status": "active",
+        "subscriber": {
+          "reference": "Patient/pat-001"
+        },
+        "subscriberId": "ACME-445566"
+      }
+    },
+    {
+      "fullUrl": "https://priorpacket.invalid/fhir/DocumentReference/doc-onc-note-001",
+      "resource": {
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "clinical-note",
+                "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-documentreference-category"
+              }
+            ]
+          }
+        ],
+        "content": [
+          {
+            "attachment": {
+              "contentType": "text/plain",
+              "data": "UGF0aWVudCBoYXMgbWV0YXN0YXRpYyBwcm9ncmVzc2lvbiBkZXNwaXRlIHBhY2xpdGF4ZWwuIEhFUjIgSUhDIGlzIDMrIGFuZCB0cmFzdHV6dW1hYiBpcyBjbGluaWNhbGx5IGluZGljYXRlZC4=",
+              "title": "Oncology progress note (synthetic)"
+            }
+          }
+        ],
+        "date": "2026-02-01T15:00:00Z",
+        "description": "Patient has metastatic progression despite paclitaxel. HER2 IHC is 3+ and trastuzumab is clinically indicated.",
+        "id": "doc-onc-note-001",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/profile-documentreference"
+          ]
+        },
+        "resourceType": "DocumentReference",
+        "status": "current",
+        "subject": {
+          "reference": "Patient/pat-001"
+        },
+        "type": {
+          "coding": [
+            {
+              "code": "11506-3",
+              "display": "Progress note",
+              "system": "http://loinc.org"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "https://priorpacket.invalid/fhir/MedicationRequest/medreq-taxane-001",
+      "resource": {
+        "authoredOn": "2025-12-12",
+        "id": "medreq-taxane-001",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "code": "56946",
+              "display": "paclitaxel",
+              "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+            }
+          ]
+        },
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-medicationrequest"
+          ]
+        },
+        "requester": {
+          "reference": "Organization/northstar-oncology"
+        },
+        "resourceType": "MedicationRequest",
+        "status": "stopped",
+        "statusReason": {
+          "text": "failed: disease progression and grade 3 neuropathy"
+        },
+        "subject": {
+          "reference": "Patient/pat-001"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://priorpacket.invalid/fhir/Observation/obs-her2-001",
+      "resource": {
+        "category": [
+          {
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "48676-1",
+              "display": "HER2 Ag [Interpretation] in Tissue",
+              "system": "http://loinc.org"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-01-20T12:00:00Z",
+        "id": "obs-her2-001",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observation-clinical-result"
+          ]
+        },
+        "resourceType": "Observation",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/pat-001"
+        },
+        "valueQuantity": {
+          "code": "{score}",
+          "system": "http://unitsofmeasure.org",
+          "unit": "score",
+          "value": 3
+        }
+      }
+    },
+    {
+      "fullUrl": "https://priorpacket.invalid/fhir/Patient/pat-001",
+      "resource": {
+        "birthDate": "1974-04-18",
+        "gender": "female",
+        "id": "pat-001",
+        "identifier": [
+          {
+            "system": "https://hospital.invalid/mrn",
+            "value": "MRN-10001"
+          }
+        ],
+        "name": [
+          {
+            "family": "Rivera",
+            "given": [
+              "Elena"
+            ]
+          }
+        ],
+        "resourceType": "Patient"
+      }
+    }
+  ],
+  "id": "bundle-45fff5d6a36e",
+  "identifier": {
+    "system": "https://priorpacket.invalid/fhir/identifier/bundle",
+    "value": "bundle-45fff5d6a36e"
+  },
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/us/davinci-pas/StructureDefinition/profile-pas-request-bundle"
+    ]
+  },
+  "resourceType": "Bundle",
+  "timestamp": "2026-02-15T09:00:00Z",
+  "type": "collection"
+}

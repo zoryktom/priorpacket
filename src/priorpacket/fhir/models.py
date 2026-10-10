@@ -168,7 +168,6 @@ class Encounter(Resource):
     period: Period | None = None
     reasonCode: list[CodeableConcept] = Field(default_factory=list)
     diagnosis: list[dict[str, Any]] = Field(default_factory=list)
-    note: list[Annotation] = Field(default_factory=list)
 
 
 class ClaimDiagnosis(FHIRModel):
@@ -275,6 +274,7 @@ class Bundle(Resource):
         "searchset",
         "collection",
     ] = "collection"
+    identifier: Identifier | None = None
     timestamp: str | None = None
     entry: list[BundleEntry] = Field(default_factory=list)
 

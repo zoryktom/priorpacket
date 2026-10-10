@@ -40,7 +40,8 @@ def test_builds_complete_oncology_pas_bundle() -> None:
         "Coverage",
         "Condition",
         "Observation",
-        "Encounter",
+        "MedicationRequest",
+        "DocumentReference",
         "Claim",
     }
 
@@ -66,7 +67,7 @@ def test_incomplete_packet_attributes_missing_lab() -> None:
 
     assert audit.passed is False
     assert audit.status == "incomplete"
-    assert any(issue.code == "MISSING_LAB" and issue.criterion == "48642-3" for issue in audit.issues)
+    assert any(issue.code == "MISSING_LAB" and issue.criterion == "48676-1" for issue in audit.issues)
 
 
 def test_successful_authorization_response_passes() -> None:

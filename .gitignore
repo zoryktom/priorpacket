@@ -9,5 +9,7 @@ dist/
 build/
 *.egg-info/
 demo-output*/
-reports/
+reports/*
+!reports/validation/
 work/
+.cache/

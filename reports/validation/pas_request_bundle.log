@@ -1,0 +1,75 @@
+FHIR Validation tool Version 7.0.1 (Git# d8783284409e). Built 2026-10-08T03:33:12.303Z (40 hours old)
+  Java:   17.0.20.1 from /private/tmp/fv/jdk-17.0.20.1+1-jre/Contents/Home on aarch64 (64bit). 2048MB available
+  Paths:  Current = /Users/zoryktomykola/allerclean/copilot-worktrees/priorpacket/zoryktom-vigilant-sniffle, Package Cache = /Users/zoryktomykola/.fhir/packages
+  Params: -version 4.0.1 -ig hl7.fhir.us.davinci-pas#2.2.1 /var/folders/fv/pvff6_0d7vq1hbvyk0pvdkf00000gn/T/tmp.Ktkw1PG49j/oncology_pas_request_bundle.json -profile http://hl7.org/fhir/us/davinci-pas/StructureDefinition/profile-pas-request-bundle -output /tmp/vout3/pas_request_bundle.outcome.json
+  Locale: United States/US
+  Jurisdiction: United States of America
+Loading
+  Loading FHIR v4.0.1 from hl7.fhir.r4.core#4.0.1
+  Load hl7.terminology.r4#6.2.0 - 4288 resources (00:03.372)
+  Load hl7.fhir.uv.extensions.r4#5.2.0 - 759 resources (00:01.040)
+  Loaded FHIR - 8265 resources (00:00.000)
+  Terminology Cache at /var/folders/fv/pvff6_0d7vq1hbvyk0pvdkf00000gn/T/default-tx-cache/r4
+  Terminology server https://tx.fhir.org - Version Connected to Terminology Server at https://tx.fhir.org (00:00.606)
+  Load hl7.terminology#7.4.0 - 4181 resources (00:00.360)
+  Load hl7.fhir.uv.extensions.r5#5.2.0 - 759 resources (00:00.119)
+  Load hl7.terminology.r5#7.1.0 - 4072 resources (00:00.061)
+  Load hl7.fhir.uv.extensions#5.3.0 - 856 resources (00:00.360)
+  Load hl7.terminology.r4#7.1.0 - 4072 resources (00:00.115)
+  Load hl7.fhir.us.core#3.1.1 - 146 resources (00:00.013)
+  Load hl7.fhir.us.core.v311#3.1.1 - 0 resources (00:00.000)
+  Load hl7.terminology.r4#5.0.0 - 4175 resources (00:00.200)
+  Load hl7.fhir.uv.extensions.r4#1.0.0 - 1329 resources (00:00.611)
+  Load hl7.fhir.uv.bulkdata#2.0.0 - 7 resources (00:00.002)
+  Load hl7.fhir.uv.smart-app-launch#2.1.0 - 8 resources (00:00.002)
+  Load us.nlm.vsac#0.11.0 - 14323 resources (00:00.430)
+  Load hl7.fhir.r4.examples#4.0.1 - 4581 resources (00:01.356)
+  Load hl7.fhir.uv.sdc#3.0.0 - 138 resources (00:00.008)
+  Load us.cdc.phinvads#0.12.0 - 1967 resources (00:00.064)
+  Load ihe.formatcode.fhir#1.1.0 - 3 resources (00:00.002)
+  Load hl7.fhir.us.core#6.1.0 - 213 resources (00:00.002)
+  Load hl7.fhir.us.core.v610#6.1.0 - 0 resources (00:00.000)
+  Load hl7.terminology.r4#5.5.0 - 4225 resources (00:00.131)
+  Load hl7.fhir.uv.smart-app-launch#2.0.0 - 1 resources (00:00.003)
+  Load us.nlm.vsac#0.18.0 - 15332 resources (00:00.645)
+  Load hl7.terminology.r5#5.3.0 - 4202 resources (00:00.218)
+  Load hl7.fhir.uv.extensions#5.1.0-snapshot1 - 1379 resources (00:00.069)
+  Load hl7.fhir.us.core#7.0.0 - 217 resources (00:00.003)
+  Load hl7.fhir.uv.xver-r5.r4#0.1.0 - 4707 resources (00:00.142)
+  Load hl7.fhir.uv.tools.r4#1.1.2 - 118 resources (00:00.014)
+  Load hl7.terminology.r4#6.5.0 - 4357 resources (00:00.141)
+  Load hl7.fhir.uv.extensions.r4#5.3.0-ballot-tc1 - 855 resources (00:00.482)
+  Load hl7.fhir.uv.sdc#4.0.0 - 181 resources (00:00.004)
+  Load us.nlm.vsac#0.19.0 - 15332 resources (00:00.638)
+  Load hl7.fhir.us.davinci-hrex#1.2.0 - 31 resources (00:00.002)
+  Load hl7.terminology.r4#7.0.1 - 4066 resources (00:00.142)
+  Load hl7.fhir.uv.cds-hooks#3.0.0-ballot - 5 resources (00:00.000)
+  Load hl7.fhir.uv.cds-hooks-library#1.0.1 - 1 resources (00:00.001)
+  Load hl7.fhir.us.davinci-crd#2.2.1 - 87 resources (00:00.019)
+  Load hl7.fhir.uv.extensions.r4#5.1.0 - 1397 resources (00:00.747)
+  Load hl7.terminology.r4#6.1.0 - 4279 resources (00:00.163)
+  Load hl7.fhir.us.davinci-hrex#1.1.0 - 29 resources (00:00.002)
+  Load hl7.terminology.r4#5.3.0 - 4202 resources (00:00.201)
+  Load hl7.fhir.us.udap-security#0.1.0 - 2 resources (00:00.004)
+  Load hl7.fhir.us.davinci-hrex#1.0.0 - 26 resources (00:00.000)
+  Load hl7.fhir.us.davinci-crd#2.0.0 - 42 resources (00:00.007)
+  Load hl7.fhir.uv.subscriptions-backport.r4#1.1.0 - 24 resources (00:00.003)
+  Load us.nlm.vsac#0.7.0 - 12403 resources (00:00.447)
+  Load hl7.fhir.us.carin-bb#2.0.0 - 91 resources (00:00.001)
+  Load hl7.fhir.us.davinci-pas#2.1.0 - 102 resources (00:00.005)
+  Load hl7.fhir.us.davinci-crd#2.1.0 - 52 resources (00:00.013)
+  Load hl7.fhir.us.davinci-dtr#2.1.0 - 40 resources (00:00.006)
+  Load hl7.fhir.us.davinci-cdex#2.1.0 - 25 resources (00:00.000)
+  Load hl7.fhir.us.davinci-pas#2.2.1 - 111 resources (00:00.005)
+  Package Summary: [hl7.fhir.r4.core#4.0.1, hl7.fhir.xver-extensions#0.1.0, hl7.terminology.r4#6.2.0, hl7.fhir.uv.extensions.r4#5.2.0, hl7.terminology#7.4.0, hl7.fhir.uv.extensions.r5#5.2.0, hl7.terminology.r5#7.1.0, hl7.fhir.uv.extensions#5.3.0, hl7.terminology.r4#7.1.0, hl7.fhir.us.core#3.1.1, hl7.fhir.us.core.v311#3.1.1, hl7.terminology.r4#5.0.0, hl7.fhir.uv.extensions.r4#1.0.0, hl7.fhir.uv.bulkdata#2.0.0, hl7.fhir.uv.smart-app-launch#2.1.0, us.nlm.vsac#0.11.0, hl7.fhir.r4.examples#4.0.1, hl7.fhir.uv.sdc#3.0.0, us.cdc.phinvads#0.12.0, ihe.formatcode.fhir#1.1.0, hl7.fhir.us.core#6.1.0, hl7.fhir.us.core.v610#6.1.0, hl7.terminology.r4#5.5.0, hl7.fhir.uv.smart-app-launch#2.0.0, us.nlm.vsac#0.18.0, hl7.terminology.r5#5.3.0, hl7.fhir.uv.extensions#5.1.0-snapshot1, hl7.fhir.us.core#7.0.0, hl7.fhir.uv.xver-r5.r4#0.1.0, hl7.fhir.uv.tools.r4#1.1.2, hl7.terminology.r4#6.5.0, hl7.fhir.uv.extensions.r4#5.3.0-ballot-tc1, hl7.fhir.uv.sdc#4.0.0, us.nlm.vsac#0.19.0, hl7.fhir.us.davinci-hrex#1.2.0, hl7.terminology.r4#7.0.1, hl7.fhir.uv.cds-hooks#3.0.0-ballot, hl7.fhir.uv.cds-hooks-library#1.0.1, hl7.fhir.us.davinci-crd#2.2.1, hl7.fhir.uv.extensions.r4#5.1.0, hl7.terminology.r4#6.1.0, hl7.fhir.us.davinci-hrex#1.1.0, hl7.terminology.r4#5.3.0, hl7.fhir.us.udap-security#0.1.0, hl7.fhir.us.davinci-hrex#1.0.0, hl7.fhir.us.davinci-crd#2.0.0, hl7.fhir.uv.subscriptions-backport.r4#1.1.0, us.nlm.vsac#0.7.0, hl7.fhir.us.carin-bb#2.0.0, hl7.fhir.us.davinci-pas#2.1.0, hl7.fhir.us.davinci-crd#2.1.0, hl7.fhir.us.davinci-dtr#2.1.0, hl7.fhir.us.davinci-cdex#2.1.0, hl7.fhir.us.davinci-pas#2.2.1]
+  Get set... 
+  ...go! (00:07.162)
+Cached new session. Cache size = 1
+Sources to validate: /var/folders/fv/pvff6_0d7vq1hbvyk0pvdkf00000gn/T/tmp.Ktkw1PG49j/oncology_pas_request_bundle.json
+Validating
+  Profiles: [http://hl7.org/fhir/us/davinci-pas/StructureDefinition/profile-pas-request-bundle]
+  Validate /var/folders/fv/pvff6_0d7vq1hbvyk0pvdkf00000gn/T/tmp.Ktkw1PG49j/oncology_pas_request_bundle.json
+ 00:03.672
+Done. Times: Loading: 00:20.225, validation: 00:03.673. Memory = 1Gb
+
+Done. Times: Loading: 00:20.225, validation: 00:03.673. Max Memory = 2Gb
